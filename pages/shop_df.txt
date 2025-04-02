@@ -1,0 +1,128 @@
+<template>
+  <div class="shop-bg woo-box-flex">
+    <!-- 侧边菜单 -->
+    <CampusMenu
+      class="hidden-xs-only"
+      v-if="categoryObj != null"
+      :categoryObj="categoryObj"
+      @handleCategory="selectCategory"
+    ></CampusMenu>
+
+    <div class="shop-main">
+      <div class="woo-box-flex" :style="{ 'min-height': mainMinHeight + 'px' }">
+        <!-- 商品内容 -->
+        <div class="content-t" v-loading="loading">
+          <ProductCard
+            v-for="(item, key) in productList"
+            :key="key"
+            :productObj="item"
+          ></ProductCard>
+
+          <!-- 分页 -->
+          <div class="fenye" v-if="!loading">
+            <el-pagination
+              :hide-on-single-page="true"
+              background
+              layout="prev, pager, next"
+              :total="total"
+              :current-page="currentPage"
+              :page-size="10"
+              @current-change="handleCurrentChange"
+            >
+            </el-pagination>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+// 引入 API
+import shopApi from "@/api/shop";
+import CampusMenu from "@/components/Menu";
+import CampusSide from "@/components/CampusSide";
+import ProductCard from "@/components/ProductCard";
+
+export default {
+  components: { CampusMenu, CampusSide, ProductCard },
+  data() {
+    return {
+      categoryObj: null, // 分类数据
+      productList: [], // 商品列表
+      shopFilter: {
+        pageNum: 1,
+        categoryId: null, // 选中的分类
+      },
+      mainMinHeight: "",
+      loading: true,
+      total: 0,
+      currentPage: 1,
+    };
+  },
+  created() {
+    this.getAllCategories();
+    this.getProducts(this.shopFilter);
+  },
+  mounted() {
+    this.mainMinHeight = document.documentElement.clientHeight - 45;
+  },
+  methods: {
+    // 选择分类
+    selectCategory(categoryId) {
+      if (isNaN(categoryId)) {
+        console.warn("Invalid category ID:", categoryId);
+        return;
+      }
+      this.shopFilter.categoryId = categoryId;
+      this.getProducts(this.shopFilter);
+    },
+    // 获取分类
+    getAllCategories() {
+      shopApi.getCategoryList().then((response) => {
+        this.categoryObj = response.data;
+      }).catch();
+    },
+    // 获取商品列表
+    getProducts(shopFilter) {
+      this.loading = true;
+      shopApi.getProductList(shopFilter).then((response) => {
+        this.productList = response.rows;
+        this.total = parseInt(response.total);
+        this.loading = false;
+      }).catch();
+    },
+    // 分页
+    handleCurrentChange(val) {
+      this.shopFilter.pageNum = val;
+      this.currentPage = this.shopFilter.pageNum;
+      this.getProducts(this.shopFilter);
+    },
+  },
+};
+</script>
+
+<style>
+.shop-bg {
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  max-width: 1122px;
+  margin: auto;
+}
+.shop-main {
+  flex: 1;
+  padding: 20px;
+}
+.fenye {
+  width: 100%;
+  margin: 0 auto;
+  text-align: center;
+}
+.content-t {
+  margin: 20px 0 0 0;
+}
+</style>
+shoppingorder 订单
+shoppinglist 购物车
+product 商品列表
