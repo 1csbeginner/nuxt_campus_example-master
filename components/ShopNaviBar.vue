@@ -38,10 +38,10 @@ export default {
       this.$router.push({ path: "/shop", query: { search: this.searchQuery } });
     },
     goToCart() {
-      this.$router.push("/cart");
+      this.$router.push("/order/cart");
     },
     goToOrders() {
-      this.$router.push("/orders");
+      this.$router.push("/order/orders");
     },
     goBack(){
       if (this.$route.name === 'shop') {

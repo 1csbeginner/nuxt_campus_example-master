@@ -4,9 +4,9 @@ const api_name = `/api/shop`
 
 export default {
     //获取商品列表
-    getProductList(productSet) {
+    getList(req, productSet) {
         return request({
-            url: `campus/product/list`,
+            url: `campus/${req}/list`,
             method: 'get',
             params: productSet
         })
@@ -27,5 +27,6 @@ export default {
       //直接从后端获取图片
       return process.env.NUXT_ENV.API_BASE_URL + image;
     },
-  
+
+
  }

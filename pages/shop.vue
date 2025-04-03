@@ -61,7 +61,7 @@ export default {
     getProducts(shopFilter) {
       this.loading = true;
       shopApi
-        .getProductList(shopFilter)
+        .getList('product', shopFilter)
         .then((response) => {
           console.log("商品列表:", response);
           this.productList = response.rows.map((item) => ({
