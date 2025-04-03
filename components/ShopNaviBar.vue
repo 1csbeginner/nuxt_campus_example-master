@@ -44,10 +44,10 @@ export default {
       this.$router.push("/orders");
     },
     goBack(){
-      if (this.$route.name === 'product-productId') {
-        this.$router.push('/shop');  // 商品详情页返回商城
-      } else {
+      if (this.$route.name === 'shop') {
         this.$router.push('/');  // 商品详情页返回商城
+      } else {
+        this.$router.push('/shop');  // 商品详情页返回商城
       }
     }
   },
