@@ -15,6 +15,13 @@
         <p class="product-introduce">{{ product.introduce }}</p>
         <p class="product-desc">{{ product.description }}</p>
 
+        <!-- 数量选择 -->
+        <div class="quantity-selector">
+          <button @click="decreaseQuantity">-</button>
+          <span>{{ quantity }}</span>
+          <button @click="increaseQuantity">+</button>
+        </div>
+
         <!-- 按钮 -->
         <div class="btn-group">
           <el-button type="warning" @click="buyNow">立即购买</el-button>
@@ -33,6 +40,7 @@ export default {
   data() {
     return {
       product: {}, // 存储商品信息
+      quantity: 1, // 存储商品数量，初始值为1
     };
   },
   created() {
@@ -54,10 +62,30 @@ export default {
     getImg(image) {
       return shopApi.getProductImg(image);
     },
+    // 增加数量
+    increaseQuantity() {
+      if (this.quantity < this.product.stock) {
+        this.quantity++;
+      }
+    },
+    // 减少数量
+    decreaseQuantity() {
+      if (this.quantity > 1) {
+        this.quantity--;
+      }
+    },
     buyNow() {
+      // 购买逻辑，发送数量和商品ID给API
+      console.log(`购买商品: ${this.product.id}, 数量: ${this.quantity}`);
+      // 调用API处理购买
+      // shopApi.buyNow({ productId: this.product.id, quantity: this.quantity });
       this.$message.success("购买功能暂未实现");
     },
     addToCart() {
+      // 加入购物车逻辑，发送数量和商品ID给API
+      console.log(`加入购物车: ${this.product.id}, 数量: ${this.quantity}`);
+      // 调用API处理加入购物车
+      // shopApi.addToCart({ productId: this.product.id, quantity: this.quantity });
       this.$message.success("商品已加入购物车");
     },
   },
@@ -115,6 +143,23 @@ export default {
   margin-top: 10px;
   font-size: 14px;
   color: #666;
+}
+
+.quantity-selector {
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.quantity-selector button {
+  padding: 5px 10px;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.quantity-selector span {
+  margin: 0 10px;
+  font-size: 18px;
 }
 
 .btn-group {

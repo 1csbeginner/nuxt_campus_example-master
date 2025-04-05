@@ -108,11 +108,13 @@ export default {
       shopApi
         .getList('shoppinglist', cartFilter)
         .then((response) => {
+          console.log("购物车商品列表:", response);
           this.cartItems = response.rows.map((item) => ({
             id: item.id,
             product_id: item.product_id,
-            name: item.name,
-            price: item.price,
+            image: item.product.image,
+            name: item.product.name,
+            price: item.product.price,
             quantity: item.quantity,
             selected: false,
           }));

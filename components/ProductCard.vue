@@ -7,7 +7,6 @@
 
       <div class="product-bottom">
         <p class="product-stock">库存: {{ productObj.stock || 0 }} 件</p>
-        <el-button type="primary" @click.stop="addToCart">+</el-button>
       </div>
 
     </div>
@@ -24,10 +23,6 @@ export default {
     viewDetails() {
       // 可以使用 Vue Router 跳转到详情页
       this.$router.push({ path: `/product/${this.productObj.id}` });
-    },
-    addToCart(event) {
-      event.stopPropagation(); // 阻止冒泡，防止触发卡片点击事件
-      this.$emit("add-to-cart", this.productObj);
     },
     getImg(image) {
       return shopApi.getProductImg(image);
