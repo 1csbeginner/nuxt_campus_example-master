@@ -98,6 +98,20 @@ export default {
     },
     removeItem(itemId) {
       this.cartItems = this.cartItems.filter(item => item.id !== itemId);
+      shopApi.delete('shoppinglist', itemId)
+        .then(() => {
+          this.$message({
+            message: '删除成功',
+            type: 'success'
+          });
+          this.getCartItems(this.cartFilter);
+        })
+        .catch((error) => {
+          this.$message({
+            message: '删除失败',
+            type: 'error'
+          });
+        });
     },
     checkout() {
       // 结算逻辑

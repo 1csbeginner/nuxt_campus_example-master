@@ -27,6 +27,10 @@ export default {
       //直接从后端获取图片
       return process.env.NUXT_ENV.API_BASE_URL + image;
     },
-
-
+    delete(req, id) {
+        return request({
+            url: `campus/${req}/${id}`,
+            method: 'delete',
+        })
+    }
  }

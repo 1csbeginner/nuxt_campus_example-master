@@ -8,7 +8,6 @@
             v-for="(item, key) in productList"
             :key="key"
             :productObj="item"
-            @add-to-cart="handleAddToCart"
           />
           <!-- 分页 -->
           <div class="fenye" v-if="!loading">
