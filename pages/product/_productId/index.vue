@@ -41,6 +41,7 @@ export default {
     return {
       product: {}, // 存储商品信息
       quantity: 1, // 存储商品数量，初始值为1
+      productId: null, // 存储商品ID
     };
   },
   created() {
@@ -48,12 +49,11 @@ export default {
   },
   methods: {
     async loadProductDetails() {
-      const productId = this.$route.params.productId;
-      if (!productId) return;
+      this.productId = this.$route.params.productId;
+      if (!this.productId) return;
 
       try {
-        const response = await shopApi.getProductDetail(productId);
-        console.log("商品详情:", response);
+        const response = await shopApi.getProductDetail(this.productId);
         this.product = response.data;
       } catch (error) {
         console.error("加载商品详情失败", error);
@@ -82,10 +82,8 @@ export default {
       this.$message.success("购买功能暂未实现");
     },
     addToCart() {
-      // 加入购物车逻辑，发送数量和商品ID给API
-      console.log(`加入购物车: ${this.product.id}, 数量: ${this.quantity}`);
       // 调用API处理加入购物车
-      // shopApi.addToCart({ productId: this.product.id, quantity: this.quantity });
+      shopApi.addToCart(this.productId, this.quantity);
       this.$message.success("商品已加入购物车");
     },
   },

@@ -4,11 +4,12 @@ const api_name = `/api/shop`
 
 export default {
     //获取商品列表
-    getList(req, productSet) {
+    getList(req, productSet, queryParams) {
         return request({
             url: `campus/${req}/list`,
-            method: 'get',
-            params: productSet
+            method: 'put',
+            params: queryParams,  // URL 参数
+            data: productSet       // 请求体数据
         })
     },
     getProductDetail(id) {
@@ -31,6 +32,22 @@ export default {
         return request({
             url: `campus/${req}/${id}`,
             method: 'delete',
+        })
+    },
+    addToCart(id, quantity) {
+        return request({
+            url: `campus/shoppinglist/add`,
+            method: 'post',
+            data: {
+                productId: id,
+                quantity: quantity
+            }
+        })
+    },
+    finishOrder(id) {
+        return request({
+            url: `campus/shoppingorder/finish/${id}`,
+            method: 'put',
         })
     }
  }

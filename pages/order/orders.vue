@@ -64,13 +64,10 @@ export default {
       this.currentPage = val;
       this.getOrderList(this.orderFilter);
     },
-    confirmReceive(orderId) {
-      // 你可以在这里调用后台接口，确认收货逻辑
-      console.log("确认收货：", orderId);
-      // 示例：
-      // shopApi.confirmReceive(orderId).then(() => {
-      //   this.getOrderList(this.orderFilter);
-      // });
+    handleConfirmReceive(orderId) {
+      shopApi.finishOrder(orderId).then(() => {
+        this.getOrderList(this.orderFilter);
+      });
     },
     getImg(path) {
       return shopApi.getProductImg(path);

@@ -62,7 +62,6 @@ export default {
       shopApi
         .getList('product', shopFilter)
         .then((response) => {
-          console.log("商品列表:", response);
           this.productList = response.rows.map((item) => ({
             id: item.id,
             name: item.name,
