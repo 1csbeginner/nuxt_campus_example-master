@@ -44,12 +44,23 @@ export default {
             }
         })
     },
+    updateCart(id, quantity) {
+        return request({
+            url: `campus/shoppinglist`,
+            method: 'put',
+            data: {
+                id: id,
+                quantity: quantity
+            }
+        })
+    },
     finishOrder(id) {
         return request({
             url: `campus/shoppingorder/finish/${id}`,
             method: 'put',
         })
     },
+
     async getUserId() {
     let userId = sessionStorage.getItem(USER_ID_KEY)
     if (userId) {

@@ -3,7 +3,6 @@
     <input
       type="checkbox"
       v-model="item.selected"
-      @change="updateSelection"
     />
     <div class="cart-item-info">
       <img :src="getImg(item.image)" alt="商品图片" />
@@ -11,9 +10,9 @@
       <p class="cart-item-name">{{ item.name }}</p>
       <p class="cart-item-price">¥{{ item.price }}</p>
       <div class="cart-item-quantity">
-        <button @click="decreaseQuantity">-</button>
+        <button @click="decreaseQuantity" :disabled="isDecreaseDisabled">-</button>
         <span>{{ item.quantity }}</span>
-        <button @click="increaseQuantity">+</button>
+        <button @click="increaseQuantity" :disabled="isIncreaseDisabled">+</button>
       </div>
     </div>
     <button @click="removeItem">删除</button>
@@ -28,24 +27,45 @@ export default {
     item: Object,
     isSelected: Boolean
   },
-  methods: {
-    updateSelection() {
-      this.$emit('update-selection', this.item.id);
+  computed: {
+    isDecreaseDisabled() {
+      return this.item.quantity <= 1;
     },
-    increaseQuantity() {
-      this.item.quantity++;
+    isIncreaseDisabled() {
+      return this.item.quantity >= this.item.stock;
+    }
+  },
+  methods: {
+    changeQuantity(delta) {
+      const newQuantity = this.item.quantity + delta;
+
+      if (newQuantity < 1 || newQuantity > this.item.stock) {
+        return; // 超出范围，不处理
+      }
+
+      this.item.quantity = newQuantity;
+
+      shopApi.updateCart(this.item.id, this.item.quantity)
+      .then(() => {
+        // 更新成功后的逻辑，比如提示信息
+      }).catch(() => {
+        // 错误处理
+      });
       this.$emit('update-cart', this.item);
     },
+    increaseQuantity() {
+      this.changeQuantity(1);
+    },
     decreaseQuantity() {
-      if (this.item.quantity > 1) {
-        this.item.quantity--;
-        this.$emit('update-cart', this.item);
-      }
+      this.changeQuantity(-1);
+    },
+    updateSelection() {
+      this.$emit('update-selection', this.item.id);
     },
     removeItem() {
       this.$emit('remove-item', this.item.id);
     },
-    getImg(img){
+    getImg(img) {
       return shopApi.getProductImg(img);
     }
   }

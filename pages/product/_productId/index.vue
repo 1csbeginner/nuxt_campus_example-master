@@ -45,6 +45,7 @@ export default {
     };
   },
   created() {
+    this.loadCartCount();
     this.loadProductDetails();
   },
   methods: {
@@ -59,12 +60,37 @@ export default {
         console.error("加载商品详情失败", error);
       }
     },
+    async loadCartCount() {
+      this.productId = this.$route.params.productId;
+      try {
+        // 获取用户ID
+        const userId = await shopApi.getUserId();
+        if (!userId) {
+          console.error("用户未登录或获取用户ID失败");
+          this.cartCount = 0;
+          return;
+        }
+
+        // 调用 API 获取购物车中该商品的详细信息
+        const response = await shopApi.getList('shoppinglist', { createUser: userId, productId: this.productId });
+
+        // 从 rows 中找到与当前 productId 匹配的商品
+        const productInCart = response.rows.find(item => item.productId === this.productId);
+
+        // 如果购物车中有该商品，设置其数量，否则为 0
+        this.cartCount = productInCart ? productInCart.quantity : 0;
+
+      } catch (error) {
+        console.error("加载购物车数量失败", error);
+        this.cartCount = 0; // 出错时设置默认值
+      }
+    },
     getImg(image) {
       return shopApi.getProductImg(image);
     },
     // 增加数量
     increaseQuantity() {
-      if (this.quantity < this.product.stock) {
+      if (this.quantity < (this.product.stock - this.cartCount)) {
         this.quantity++;
       }
     },
@@ -81,11 +107,25 @@ export default {
       // shopApi.buyNow({ productId: this.product.id, quantity: this.quantity });
       this.$message.success("购买功能暂未实现");
     },
-    addToCart() {
-      // 调用API处理加入购物车
-      shopApi.addToCart(this.productId, this.quantity);
-      this.$message.success("商品已加入购物车");
-    },
+    async addToCart() {
+      // 检查库存是否足够
+      if (this.quantity > (this.product.stock - this.cartCount)) {
+        this.$message.error("库存不足");
+        return;
+      }
+
+      try {
+        // 调用 API 处理加入购物车
+        await shopApi.addToCart(this.productId, this.quantity);
+        this.$message.success("商品已加入购物车");
+
+        // 立即刷新购物车计数
+        await this.loadCartCount();
+      } catch (error) {
+        console.error("加入购物车失败", error);
+        this.$message.error("加入购物车失败，请稍后重试");
+      }
+    }
   },
 };
 </script>

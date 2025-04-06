@@ -129,6 +129,7 @@ export default {
             image: item.product.image,
             name: item.product.name,
             price: item.product.price,
+            stock: item.product.stock,
             quantity: item.quantity,
             selected: false,
           }));
