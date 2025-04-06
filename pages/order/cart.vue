@@ -47,7 +47,6 @@ import CartItem from '@/components/CartItem.vue';
 import CartSummary from '@/components/CartSummary.vue';
 import shopApi from "@/api/shop"; // 确保调用正确的购物车API
 import ShopNaviBar from "@/components/ShopNaviBar"; // 导入导航栏组件
-import { getToken } from "@/utils/auth"; // 导入获取token的工具函数
 export default {
   components: {
     CartItem,
