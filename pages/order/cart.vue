@@ -47,7 +47,7 @@ import CartItem from '@/components/CartItem.vue';
 import CartSummary from '@/components/CartSummary.vue';
 import shopApi from "@/api/shop"; // 确保调用正确的购物车API
 import ShopNaviBar from "@/components/ShopNaviBar"; // 导入导航栏组件
-
+import { getToken } from "@/utils/auth"; // 导入获取token的工具函数
 export default {
   components: {
     CartItem,
@@ -62,6 +62,7 @@ export default {
       },
       currentPage: 1,
       mainMinHeight: "",
+      userId: 0,
     };
   },
   computed: {
@@ -120,7 +121,7 @@ export default {
     // 获取购物车商品列表
     getCartItems(cartFilter) {
       shopApi
-        .getList('shoppinglist', cartFilter)
+        .getList('shoppinglist', { ...cartFilter, createUser: this.userId})
         .then((response) => {
           console.log("购物车商品列表:", response);
           this.cartItems = response.rows.map((item) => ({
@@ -142,9 +143,19 @@ export default {
       this.currentPage = this.cartFilter.pageNum;
       this.getCartItems(this.cartFilter);
     },
+    getUserId() {
+      userInfoApi.getUserProfile().then((response) => {
+        this.userId = response.data.userId;
+      });
+    },
   },
   created() {
-    this.getCartItems(this.cartFilter);
+    shopApi.getUserId().then(userId => {
+      if (userId) {
+        this.userId = userId
+        this.getCartItems() // 现在 userId 可用了
+      }
+    })
   },
   mounted() {
     this.mainMinHeight = document.documentElement.clientHeight - 45;

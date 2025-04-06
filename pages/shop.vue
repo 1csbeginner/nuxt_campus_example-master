@@ -31,6 +31,7 @@ import shopApi from "@/api/shop";
 import ProductCard from "@/components/ProductCard";
 import CampusMenu from "@/components/Menu";
 import ShopNaviBar from "@/components/ShopNaviBar";
+import userInfoApi from "@/api/userInfo";
 
 export default {
   components: { ProductCard, CampusMenu },

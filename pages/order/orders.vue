@@ -28,7 +28,7 @@
 <script>
 import shopApi from "@/api/shop";
 import ShopNaviBar from "@/components/ShopNaviBar";
-
+import userInfoApi from "@/api/userInfo";
 export default {
   components: { ShopNaviBar },
   data() {
@@ -39,15 +39,25 @@ export default {
       orderFilter: {
         pageNum: 1,
         pageSize: 10
-      }
+      },
+      userId: 0,
     };
   },
   created() {
-    this.getOrderList(this.orderFilter);
+    shopApi.getUserId().then(userId => {
+      if (userId) {
+        this.userId = userId
+        this.getOrderList()
+      }
+    })
+  },
+  mounted() {
+    this.userId = sessionStorage.getItem("userId");
+    this.mainMinHeight = document.documentElement.clientHeight - 45;
   },
   methods: {
     getOrderList(filter) {
-      shopApi.getList("shoppingorder", filter).then((response) => {
+      shopApi.getList("shoppingorder", { ...filter, createUser: this.userId}).then((response) => {
         console.log("订单列表：", response);
         this.orderList = response.rows.map((item) => ({
           id: item.id,
@@ -71,6 +81,11 @@ export default {
     },
     getImg(path) {
       return shopApi.getProductImg(path);
+    },
+    getUserId(){
+      userInfoApi.getUserProfile().then((response) => {
+        this.userId = response.userId;
+      });
     }
   }
 };

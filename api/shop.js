@@ -1,17 +1,17 @@
 import request from '@/utils/request'
-
+const USER_ID_KEY = 'userId' // 定义一个常量来存储用户ID的键名
 const api_name = `/api/shop`
 
 export default {
     //获取商品列表
-    getList(req, productSet, queryParams) {
-        return request({
-            url: `campus/${req}/list`,
-            method: 'put',
-            params: queryParams,  // URL 参数
-            data: productSet       // 请求体数据
-        })
+    getList(req, data) {
+      return request({
+        url: `campus/${req}/list`,
+        method: 'put',
+        data: data
+      });
     },
+
     getProductDetail(id) {
         return request({
             url: `campus/product/${id}`,
@@ -49,5 +49,24 @@ export default {
             url: `campus/shoppingorder/finish/${id}`,
             method: 'put',
         })
+    },
+    async getUserId() {
+    let userId = sessionStorage.getItem(USER_ID_KEY)
+    if (userId) {
+      return userId
     }
+
+    try {
+      const response = await request({
+        url: '/system/user/profile', // 这里替换成实际的获取用户信息的接口
+        method: 'get',
+      })
+      userId = response.data.userId
+      sessionStorage.setItem(USER_ID_KEY, userId)
+      return userId
+    } catch (error) {
+      console.error('获取用户信息失败:', error)
+      return null
+    }
+  }
  }
