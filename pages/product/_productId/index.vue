@@ -44,6 +44,9 @@ export default {
       productId: null, // 存储商品ID
     };
   },
+  components: {
+    ShopNaviBar
+  },
   created() {
     this.loadCartCount();
     this.loadProductDetails();

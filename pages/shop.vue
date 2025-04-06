@@ -31,10 +31,9 @@ import shopApi from "@/api/shop";
 import ProductCard from "@/components/ProductCard";
 import CampusMenu from "@/components/Menu";
 import ShopNaviBar from "@/components/ShopNaviBar";
-import userInfoApi from "@/api/userInfo";
 
 export default {
-  components: { ProductCard, CampusMenu },
+  components: { ProductCard, CampusMenu, ShopNaviBar },
   props:{
     productObj:Object,
   },
@@ -43,18 +42,35 @@ export default {
       productList: [], // 商品列表
       shopFilter: {
         pageNum: 1,
+        pageSize: 10,
       },
       mainMinHeight: "",
       loading: true,
       total: 0,
       currentPage: 1,
+      searchQuery: "",
     };
   },
   created() {
-    this.getProducts(this.shopFilter);
+    // this.getProducts(this.shopFilter);
   },
   mounted() {
     this.mainMinHeight = document.documentElement.clientHeight - 45;
+  },
+  watch: {
+    '$route.query.search': {
+      immediate: true,
+      handler(newSearch) {
+        if (newSearch) {
+          this.getProducts({
+            ...this.shopFilter,
+            name: newSearch,
+          });
+        } else {
+          this.getProducts(this.shopFilter);
+        }
+      }
+    }
   },
   methods: {
     // 获取商品列表

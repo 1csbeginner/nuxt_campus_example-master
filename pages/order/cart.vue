@@ -50,7 +50,8 @@ import ShopNaviBar from "@/components/ShopNaviBar"; // 导入导航栏组件
 export default {
   components: {
     CartItem,
-    CartSummary
+    CartSummary,
+    ShopNaviBar
   },
   data() {
     return {

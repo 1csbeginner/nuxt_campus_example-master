@@ -34,8 +34,11 @@ export default {
   },
   methods: {
     searchProduct() {
-      if (!this.searchQuery) return;
-      this.$router.push({ path: "/shop", query: { search: this.searchQuery } });
+      if (!this.searchQuery){
+        this.$router.push({ path: "/shop", query: {} });
+      }else{
+        this.$router.push({ path: "/shop", query: { search: this.searchQuery } });
+      }
     },
     goToCart() {
       this.$router.push("/order/cart");
