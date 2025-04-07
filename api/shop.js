@@ -42,6 +42,13 @@ export default {
             data: data
         })
     },
+    updateProduct(data){
+        return request({
+            url: `campus/product/modify`,
+            method: 'put',
+            data: data
+        })
+    },
     updateCart(id, quantity) {
         return request({
             url: `campus/shoppinglist`,

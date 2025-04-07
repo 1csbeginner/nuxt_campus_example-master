@@ -5,10 +5,6 @@
 
     <!-- 页面头部 -->
     <div class="sell-header">
-      <label>
-        <input type="checkbox" v-model="selectAll" @change="toggleSelectAll" />
-        全选
-      </label>
       <el-button type="primary" @click="openAddProductDialog">添加商品</el-button>
     </div>
 
@@ -18,8 +14,6 @@
         v-for="item in sellItems"
         :key="item.id"
         :item="item"
-        :is-selected="isItemSelected(item.id)"
-        @update-selection="updateItemSelection"
         @remove-item="removeItem"
         @edit-item="openEditProductDialog"
       />
@@ -40,16 +34,16 @@
 
     <!-- 添加/修改商品弹窗 -->
     <el-dialog
-      :title="isEditing ? '修改商品' : '添加商品'"
+      :title="currentProduct && currentProduct.id ? '修改商品' : '添加商品'"
       :visible.sync="productDialogVisible"
       width="50%"
     >
       <!-- 表单组件 -->
       <add-product-form
         :product="currentProduct"
-        :uploadUrl="'/campus/imageUpload'"
+        :uploadUrl="handleCampusUrl('/campus/imageUpload')"
         @close="closeProductDialog"
-        @submit="isEditing ? handleEditProduct : handleAddProduct"
+        @submit="handleSubmitProduct"
       />
     </el-dialog>
   </div>
@@ -60,6 +54,7 @@ import sellItem from "@/components/sellItem.vue";
 import shopApi from "@/api/shop"; // 确保调用正确的购物车API
 import ShopNaviBar from "@/components/ShopNaviBar"; // 导入导航栏组件
 import AddProductForm from "@/components/AddProductForm.vue"; // 添加商品表单组件
+import { handleCampusUrl } from "../utils/campus";
 
 export default {
   components: {
@@ -69,7 +64,6 @@ export default {
   },
   data() {
     return {
-      selectAll: false, // 全选框状态
       sellItems: [], // 商品数据
       sellFilter: {
         pageNum: 1,
@@ -78,26 +72,10 @@ export default {
       mainMinHeight: "",
       userId: 0,
       productDialogVisible: false, // 控制添加/修改商品弹窗的显示
-      isEditing: false, // 是否为编辑模式
       currentProduct: null, // 当前商品数据
     };
   },
   methods: {
-    toggleSelectAll() {
-      this.sellItems.forEach((item) => {
-        item.selected = this.selectAll;
-      });
-    },
-    isItemSelected(itemId) {
-      const item = this.sellItems.find((item) => item.id === itemId);
-      return item ? item.selected : false;
-    },
-    updateItemSelection(itemId) {
-      const item = this.sellItems.find((item) => item.id === itemId);
-      if (item) {
-        item.selected = !item.selected;
-      }
-    },
     removeItem(itemId) {
       this.sellItems = this.sellItems.filter((item) => item.id !== itemId);
       shopApi
@@ -118,13 +96,11 @@ export default {
     },
     // 打开添加商品弹窗
     openAddProductDialog() {
-      this.isEditing = false;
       this.currentProduct = null; // 清空当前商品数据
       this.productDialogVisible = true;
     },
     // 打开修改商品弹窗
     openEditProductDialog(itemId) {
-      this.isEditing = true;
       // 从 sellItems 中找到对应的商品数据
       const product = this.sellItems.find((item) => item.id === itemId);
       if (product) {
@@ -138,31 +114,35 @@ export default {
     closeProductDialog() {
       this.productDialogVisible = false;
     },
-    // 处理添加商品逻辑
-    handleAddProduct(productData) {
-      shopApi
-        .add("product", productData)
-        .then(() => {
-          this.$message.success("商品添加成功");
-          this.getsellItems(this.sellFilter); // 刷新商品列表
-          this.closeProductDialog();
-        })
-        .catch(() => {
-          this.$message.error("商品添加失败");
-        });
-    },
-    // 处理修改商品逻辑
-    handleEditProduct(productData) {
-      shopApi
-        .update("product", productData)
-        .then(() => {
-          this.$message.success("商品修改成功");
-          this.getsellItems(this.sellFilter); // 刷新商品列表
-          this.closeProductDialog();
-        })
-        .catch(() => {
-          this.$message.error("商品修改失败");
-        });
+    // 处理提交商品逻辑
+    handleSubmitProduct(productData) {
+      if (productData.id) {
+        // 修改商品
+        console.log("修改商品数据", productData);
+        shopApi
+          .updateProduct(productData)
+          .then(() => {
+            this.$message.success("商品修改成功");
+            this.getsellItems(this.sellFilter); // 刷新商品列表
+            this.closeProductDialog();
+          })
+          .catch(() => {
+            this.$message.error("商品修改失败");
+          });
+      } else {
+        // 添加商品
+        console.log("添加商品数据", productData);
+        shopApi
+          .add("product", productData)
+          .then(() => {
+            this.$message.success("商品添加成功");
+            this.getsellItems(this.sellFilter); // 刷新商品列表
+            this.closeProductDialog();
+          })
+          .catch(() => {
+            this.$message.error("商品添加失败");
+          });
+      }
     },
     // 获取商品列表
     getsellItems(sellFilter) {
@@ -171,13 +151,11 @@ export default {
         .then((response) => {
           this.sellItems = response.rows.map((item) => ({
             id: item.id,
-            product_id: item.product_id,
             image: item.image,
             name: item.name,
             price: item.price,
+            introduce: item.introduce,
             stock: item.stock,
-            quantity: item.quantity,
-            selected: false,
           }));
         })
         .catch((error) => {

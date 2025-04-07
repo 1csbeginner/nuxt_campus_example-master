@@ -43,6 +43,16 @@
           <i class="el-icon-plus"></i>
         </el-upload>
       </el-form-item>
+
+      <!-- 商品介绍 -->
+      <el-form-item label="商品介绍" prop="introduce">
+        <el-input
+          type="textarea"
+          v-model="form.introduce"
+          placeholder="请输入商品介绍"
+          rows="4"
+        />
+      </el-form-item>
     </el-form>
 
     <!-- 操作按钮 -->
@@ -65,6 +75,7 @@ export default {
         price: 0,
         stock: 0,
         image: "",
+        introduce: "", // 新增商品介绍字段
       }),
     },
     uploadUrl: {
@@ -89,6 +100,9 @@ export default {
         price: [{ required: true, message: "请输入商品价格", trigger: "blur" }],
         stock: [{ required: true, message: "请输入商品库存", trigger: "blur" }],
         image: [{ required: true, message: "请上传商品图片", trigger: "change" }],
+        introduce: [
+          { required: true, message: "请输入商品介绍", trigger: "blur" },
+        ],
       },
     };
   },
@@ -129,6 +143,7 @@ export default {
     handleSubmit() {
       this.$refs.productForm.validate((valid) => {
         if (valid) {
+          console.log("表单数据:", this.form);
           this.$emit("submit", this.form); // 提交表单数据给父组件
         } else {
           console.error("表单验证失败");
