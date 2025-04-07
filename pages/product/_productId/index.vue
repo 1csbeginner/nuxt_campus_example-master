@@ -93,7 +93,7 @@ export default {
     },
     // 增加数量
     increaseQuantity() {
-      if (this.quantity < (this.product.stock - this.cartCount)) {
+      if (this.quantity < this.product.stock) {
         this.quantity++;
       }
     },
