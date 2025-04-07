@@ -3,9 +3,15 @@
     <el-card class="order-card">
       <h2>订单信息</h2>
       <div class="order-details">
-        <p>商品名称：{{ order.productName }}</p>
-        <p>订单编号：{{ order.orderId }}</p>
-        <p>总金额：<span class="price">￥{{ order.totalPrice }}</span></p>
+        <PayItem
+          v-for="(order, index) in orders"
+          :key="order.id || index"
+          :order="order"
+          @confirm-receive="handleConfirmReceive"
+        />
+        <p class="total-price">
+          总金额：<span class="price">￥{{ totalPrice }}</span>
+        </p>
       </div>
     </el-card>
 
@@ -28,21 +34,42 @@
       <el-button type="primary" size="large" @click="confirmPayment">
         确认付款
       </el-button>
+      <el-button type="primary" size="large" @click="goBack">
+        返回
+      </el-button>
     </div>
   </div>
 </template>
 
 <script>
+import PayItem from "@/components/PayItem.vue";
+
 export default {
+  components: {
+    PayItem,
+  },
   data() {
     return {
-      order: {
-        productName: "商品示例名称",
-        orderId: "1234567890",
-        totalPrice: 199.99,
-      },
+      orders: [], // 初始化为空数组
       selectedPayment: "支付宝", // 默认支付方式
     };
+  },
+  computed: {
+    // 计算总价
+    totalPrice() {
+      return this.orders.reduce((total, order) => {
+        return total + order.price * order.quantity;
+      }, 0).toFixed(2);
+    },
+  },
+  mounted() {
+    if (process.client) {
+      const stored = sessionStorage.getItem("tempOrder");
+      if (stored) {
+        this.orders = JSON.parse(stored);
+        console.log("orders", this.orders);
+      }
+    }
   },
   methods: {
     confirmPayment() {
@@ -55,6 +82,14 @@ export default {
       setTimeout(() => {
         this.$router.push("/order-success"); // 假设有一个订单成功页面
       }, 1000);
+    },
+    handleConfirmReceive(orderId) {
+      console.log(`确认收货，订单ID: ${orderId}`);
+      this.$message.success(`订单 ${orderId} 已确认收货！`);
+    },
+    goBack() {
+      this.$router.back(); // 返回上一页
+      sessionStorage.removeItem("tempOrder"); // 清除临时订单数据
     },
   },
 };
@@ -93,5 +128,11 @@ export default {
 .pay-actions {
   text-align: center;
   margin-top: 20px;
+}
+
+.total-price {
+  font-size: 18px;
+  font-weight: bold;
+  margin-top: 10px;
 }
 </style>

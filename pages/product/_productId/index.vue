@@ -104,14 +104,20 @@ export default {
       }
     },
     buyNow() {
-      this.$router.push('/pay', {
-        selectedItems: [
-          {
-            productId: this.productId,
-            quantity: this.quantity,
-          },
-        ],
-      });
+      const orderData = [
+        {
+          id: this.productId, // 注意 id 字段要和支付页对应
+          image: this.product.image,
+          name: this.product.name,
+          price: this.product.price,
+          quantity: this.quantity,
+        },
+      ];
+      // 存储订单信息到 sessionStorage
+      sessionStorage.setItem("tempOrder", JSON.stringify(orderData));
+
+      // 跳转支付页（不要传参了）
+      this.$router.push("/pay");
     },
     async addToCart() {
       // 检查库存是否足够
