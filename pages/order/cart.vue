@@ -4,7 +4,7 @@
     <ShopNaviBar/>
     <div class="cart-header">
       <label>
-        <input type="checkbox" v-model="selectAll" @change="toggleSelectAll">
+        <input type="checkbox" v-model="selectAll">
         全选
       </label>
     </div>
@@ -55,7 +55,6 @@ export default {
   },
   data() {
     return {
-      selectAll: false,  // 全选框状态
       cartItems: [],      // 购物车商品数据
       cartFilter: {
         pageNum: 1,
@@ -79,14 +78,19 @@ export default {
     // 判断是否全选
     isAllSelected() {
       return this.selectedCount === this.cartItems.length;
-    }
+    },
+    selectAll: {
+      get() {
+        return this.cartItems.length > 0 && this.cartItems.every(item => item.selected);
+      },
+      set(value) {
+        this.cartItems.forEach(item => {
+          item.selected = value;
+        });
+      }
+    },
   },
   methods: {
-    toggleSelectAll() {
-      this.cartItems.forEach(item => {
-        item.selected = this.selectAll;
-      });
-    },
     isItemSelected(itemId) {
       const item = this.cartItems.find(item => item.id === itemId);
       return item ? item.selected : false;
