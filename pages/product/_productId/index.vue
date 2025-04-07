@@ -104,11 +104,14 @@ export default {
       }
     },
     buyNow() {
-      // 购买逻辑，发送数量和商品ID给API
-      console.log(`购买商品: ${this.product.id}, 数量: ${this.quantity}`);
-      // 调用API处理购买
-      // shopApi.buyNow({ productId: this.product.id, quantity: this.quantity });
-      this.$message.success("购买功能暂未实现");
+      this.$router.push('/pay', {
+        selectedItems: [
+          {
+            productId: this.productId,
+            quantity: this.quantity,
+          },
+        ],
+      });
     },
     async addToCart() {
       // 检查库存是否足够

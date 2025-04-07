@@ -1,9 +1,5 @@
 <template>
   <div class="sell-item">
-    <input
-      type="checkbox"
-      v-model="item.selected"
-    />
     <div class="sell-item-info">
       <img :src="getImg(item.image)" alt="商品图片" />
       <p class="sell-item-id">{{ item.product_id }}</p>
@@ -24,12 +20,8 @@ import shopApi from "@/api/shop"; // 确保调用正确的购物车API
 export default {
   props: {
     item: Object,
-    isSelected: Boolean
   },
   methods: {
-    updateSelection() {
-      this.$emit('update-selection', this.item.id);
-    },
     removeItem() {
       this.$emit('remove-item', this.item.id);
     },
