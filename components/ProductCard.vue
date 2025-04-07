@@ -42,6 +42,7 @@ export default {
   overflow: hidden;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s ease-in-out;
+  margin-right: 30px;
 }
 
 .product-card:hover {

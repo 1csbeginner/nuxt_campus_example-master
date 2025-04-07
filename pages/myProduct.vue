@@ -79,7 +79,7 @@ export default {
     removeItem(itemId) {
       this.sellItems = this.sellItems.filter((item) => item.id !== itemId);
       shopApi
-        .delete("shoppinglist", itemId)
+        .delete("product", itemId)
         .then(() => {
           this.$message({
             message: "删除成功",
