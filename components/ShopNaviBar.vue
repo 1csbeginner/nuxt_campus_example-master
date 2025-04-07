@@ -15,6 +15,8 @@
 
     <!-- 右侧按钮 -->
     <div class="nav-right">
+      <el-button type="text"  @click="goToMyProduct">我的商品</el-button>
+      <el-button type="text" @click="goToAddress">我的地址</el-button>
       <el-button type="text" icon="el-icon-shopping-cart" @click="goToCart">
         购物车
       </el-button>
@@ -45,6 +47,12 @@ export default {
     },
     goToOrders() {
       this.$router.push("/order/orders");
+    },
+    goToAddress(){
+      this.$router.push("/order/address");
+    },
+    goToMyProduct() {
+      this.$router.push("/myProduct");
     },
     goBack(){
       if (this.$route.name === 'shop') {

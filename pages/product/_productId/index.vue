@@ -119,7 +119,7 @@ export default {
 
       try {
         // 调用 API 处理加入购物车
-        await shopApi.addToCart(this.productId, this.quantity);
+        await shopApi.add("shoppinglist", { productId: this.productId, quantity: this.quantity});
         this.$message.success("商品已加入购物车");
 
         // 立即刷新购物车计数

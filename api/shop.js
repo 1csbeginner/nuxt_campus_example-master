@@ -34,14 +34,12 @@ export default {
             method: 'delete',
         })
     },
-    addToCart(id, quantity) {
+
+    add(req, data) {
         return request({
-            url: `campus/shoppinglist/add`,
+            url: `campus/${req}/add`,
             method: 'post',
-            data: {
-                productId: id,
-                quantity: quantity
-            }
+            data: data
         })
     },
     updateCart(id, quantity) {
@@ -60,7 +58,6 @@ export default {
             method: 'put',
         })
     },
-
     async getUserId() {
     let userId = sessionStorage.getItem(USER_ID_KEY)
     if (userId) {
