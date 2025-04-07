@@ -65,6 +65,17 @@ export default {
             method: 'put',
         })
     },
+    uploadImage(data) {
+      return request({
+        url: "/campus/imageUpload", // 上传接口地址
+        method: "post",
+        data, // 直接传递 FormData
+        headers: {
+          "Content-Type": "multipart/form-data", // 设置请求头
+        },
+      });
+    },
+
     async getUserId() {
     let userId = sessionStorage.getItem(USER_ID_KEY)
     if (userId) {

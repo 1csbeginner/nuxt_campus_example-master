@@ -30,15 +30,15 @@
       </el-form-item>
 
       <!-- 商品图片 -->
-      <el-form-item label="商品图片" prop="image">
+      <el-form-item label="商品图片">
         <el-upload
           class="upload-demo"
-          :action="uploadUrl"
-          :on-success="handleUploadSuccess"
+          :http-request="customUpload"
           :file-list="fileList"
           :limit="1"
-          :accept="accept"
-          :list-type="listType"
+          accept="image/*"
+          list-type="picture-card"
+          :on-remove="handleRemove"
         >
           <i class="el-icon-plus"></i>
         </el-upload>
@@ -64,7 +64,8 @@
 </template>
 
 <script>
-import shopApi from "@/api/shop"; // 确保调用正确的 API
+import shopApi from "@/api/shop";
+import { getToken } from "@/utils/auth"; // 确保你有这个方法来获取 token
 
 export default {
   props: {
@@ -75,26 +76,21 @@ export default {
         price: 0,
         stock: 0,
         image: "",
-        introduce: "", // 新增商品介绍字段
+        introduce: "",
       }),
     },
-    uploadUrl: {
-      type: String,
-      default: "/upload", // 默认上传接口
-    },
-    accept: {
-      type: String,
-      default: "image/*", // 默认接受图片类型
-    },
-    listType: {
-      type: String,
-      default: "picture-card", // 默认展示为图片卡片
-    },
+    uploadUrl:String
   },
   data() {
     return {
-      form: { ...this.product }, // 初始化表单数据
-      fileList: [], // 上传的文件列表
+      form: { ...this.product },
+      fileList: [],
+      upload: {
+       headers: {
+         Authorization: "Bearer " + getToken(), // 如果有 token
+       },
+     },
+     imageUrl: "", // 用于存储图片地址或 ID
       rules: {
         name: [{ required: true, message: "请输入商品名称", trigger: "blur" }],
         price: [{ required: true, message: "请输入商品价格", trigger: "blur" }],
@@ -114,43 +110,83 @@ export default {
           this.fileList = [
             {
               name: "已上传图片",
-              url: this.getImg(newProduct.image), // 使用 getImg 方法生成图片 URL
+              url: this.getImg(newProduct.image),
             },
           ];
         } else {
           this.fileList = [];
         }
-        this.form = { ...newProduct }; // 初始化表单数据
+        this.form = { ...newProduct };
       },
     },
   },
   methods: {
-    getImg(img) {
-      return shopApi.getProductImg(img); // 调用 API 生成图片 URL
+    beforeUpload(file) {
+      const isImage = file.type.startsWith("image/");
+      const isLt5M = file.size / 1024 / 1024 < 5;
+      if (!isImage) {
+        this.$message.error("只能上传图片格式文件");
+        return false;
+      }
+      if (!isLt5M) {
+        this.$message.error("图片大小不能超过5MB");
+        return false;
+      }
+      return true;
     },
-    handleUploadSuccess(response, file) {
-      this.form.image = response.url; // 假设后端返回图片的 URL
-      this.fileList = [
-        {
-          name: file.name,
-          url: response.url,
-        },
-      ];
+    handleUploadError() {
+      this.$message.error("图片上传失败！");
+    },
+    getImg(img) {
+      return shopApi.getProductImg(img);
     },
     handleCancel() {
-      this.$emit("close"); // 通知父组件关闭弹窗
+      this.$emit("close");
     },
     handleSubmit() {
       this.$refs.productForm.validate((valid) => {
         if (valid) {
           console.log("表单数据:", this.form);
-          this.$emit("submit", this.form); // 提交表单数据给父组件
+          this.$emit("submit", this.form);
         } else {
           console.error("表单验证失败");
         }
       });
     },
+    handleRemove(file, fileList) {
+      console.log("文件移除:", file, fileList);
+      this.fileList = fileList;
+      if (fileList.length === 0) {
+        this.form.image = ""; // 清空图片 URL
+      }
+    },
+    customUpload({ file }) {
+    const formData = new FormData();
+      formData.append("file", file); // 将文件添加到 FormData 中
+
+      // 使用 axios 或封装的 API 方法发送请求
+      shopApi.uploadImage(formData) // 假设你有一个封装的上传方法
+        .then((response) => {
+          if (response.code === 200) {
+            this.form.image = response.data.url; // 假设后端返回图片 URL
+            this.fileList = [
+              {
+                name: file.name,
+                url: this.getImg(response.data.url),
+              },
+            ];
+            this.$message.success("图片上传成功");
+          } else {
+            this.$message.error(response.msg || "图片上传失败");
+          }
+        })
+        .catch((error) => {
+          console.error("上传失败:", error);
+          this.$message.error("图片上传失败，请重试");
+        });
+    },
   },
+
 };
 </script>
 
