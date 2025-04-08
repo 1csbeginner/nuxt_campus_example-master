@@ -8,7 +8,6 @@
           v-for="(order, index) in orders"
           :key="order.id || index"
           :order="order"
-          @confirm-receive="handleConfirmReceive"
         />
         <p class="total-price">
           总金额：<span class="price">￥{{ totalPrice }}</span>
@@ -45,7 +44,8 @@
 <script>
 import PayItem from "@/components/PayItem.vue";
 import AddressCard from "@/components/AddressCard.vue"; // 假设有一个地址卡片组件
-import userInfoApi from "@/api/userInfo"
+import userInfoApi from "@/api/userinfo"; // 假设有一个获取用户信息的 API
+import shopApi from "@/api/shop";
 
 export default {
   components: {
@@ -77,20 +77,65 @@ export default {
     this.fetchAddress();
   },
   methods: {
-    confirmPayment() {
-      if (!this.selectedPayment) {
-        this.$message.error("请选择支付方式！");
-        return;
+      async confirmPayment() {
+        if (!this.selectedPayment) {
+          this.$message.error("请选择支付方式！");
+          return;
+        }
+        if (!this.selectedAddress) {
+          this.$message.error("请先选择收货地址！");
+          return;
+        }
+
+        try {
+          // 循环发送商品信息
+          for (const order of this.orders) {
+            await this.sendOrderToApi(order);
+            // 发送成功后，删除购物车中的商品
+            if(order.cartId !== null) {
+              await this.removeCartItem(order.cartId);
+            }
+          }
+
+          // 模拟支付成功后的跳转
+          setTimeout(() => {
+            this.$message.success("支付成功！");
+            this.$router.push("/order/orders"); // 假设有一个订单成功页面
+          }, 1000);
+        } catch (error) {
+          console.error("订单发送失败:", error);
+          this.$message.error("订单发送失败，请稍后重试！");
+        }
+      },
+
+    async sendOrderToApi(order) {
+      try {
+        // 调用后端 API 发送商品信息
+        const response = await shopApi.sendOrder({
+          productId: order.id,
+          quantity: order.quantity,
+          price: (order.price * order.quantity).toFixed(2),
+        });
+
+        if (response.code !== 200) {
+          throw new Error(`商品 ${order.id} 发送失败`);
+        }
+
+        console.log(`商品 ${order.id} 发送成功`);
+        console.log(order.stock - order.quantity)
+
+        shopApi.updateProduct({
+          id: order.id,
+          stock: (order.stock - order.quantity),
+        }).catch((error) => {
+          console.error("更新商品数量失败:", error);
+        });
+
+        sessionStorage.removeItem("tempOrder"); // 清除临时订单数据
+      } catch (error) {
+        console.error(`发送商品 ${order.id} 时出错:`, error);
+        throw error; // 抛出错误以便在 `confirmPayment` 中捕获
       }
-      if(!this.selectedAddress) {
-        this.$message.error("请先选择收货地址！");
-        return;
-      }
-      this.$message.success(`使用 ${this.selectedPayment} 支付成功！`);
-      // 模拟支付成功后的跳转
-      setTimeout(() => {
-        this.$router.push("/order-success"); // 假设有一个订单成功页面
-      }, 1000);
     },
     async fetchAddress() {
       try {
@@ -115,13 +160,16 @@ export default {
         this.$message.error("获取用户信息失败，请稍后重试！");
       }
     },
-    handleConfirmReceive(orderId) {
-      console.log(`确认收货，订单ID: ${orderId}`);
-      this.$message.success(`订单 ${orderId} 已确认收货！`);
-    },
+
     goBack() {
       this.$router.back(); // 返回上一页
       sessionStorage.removeItem("tempOrder"); // 清除临时订单数据
+    },
+    removeCartItem(itemId) {
+      // 调用后端 API 删除商品
+      shopApi.delete('shoppinglist', itemId).catch((error) => {
+        console.error("删除商品失败:", error);
+      });
     },
   },
 };

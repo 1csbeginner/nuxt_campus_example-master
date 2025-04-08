@@ -120,8 +120,17 @@ export default {
     },
     checkout() {
       // 获取选中商品的信息
-      const selectedItems = this.cartItems.filter(item => item.selected);
-
+      const selectedItems = this.cartItems
+        .filter(item => item.selected)
+        .map(item => ({
+          cartId: item.id,
+          id: item.productId, // 添加 product_id
+          name: item.name,
+          price: item.price,
+          quantity: item.quantity,
+          stock: item.stock,
+          image: item.image,
+        }));
       if (selectedItems.length === 0) {
         this.$message.error("请选择要结算的商品！");
         return;
@@ -129,8 +138,6 @@ export default {
 
       // 将选中商品的信息存储到 sessionStorage
       sessionStorage.setItem("tempOrder", JSON.stringify(selectedItems));
-
-      // 跳转到支付页面
       this.$router.push("/pay");
     },
     // 获取购物车商品列表
@@ -138,10 +145,9 @@ export default {
       shopApi
         .getList('shoppinglist', { ...cartFilter, createUser: this.userId})
         .then((response) => {
-          console.log("购物车商品列表:", response);
           this.cartItems = response.rows.map((item) => ({
             id: item.id,
-            product_id: item.product_id,
+            productId: item.productId,
             image: item.product.image,
             name: item.product.name,
             price: item.product.price,

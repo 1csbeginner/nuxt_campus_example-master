@@ -75,6 +75,13 @@ export default {
         },
       });
     },
+    sendOrder(data) {
+        return request({
+            url: `campus/shoppingorder/add`,
+            method: 'post',
+            data: data
+        })
+    },
 
     async getUserId() {
     let userId = sessionStorage.getItem(USER_ID_KEY)

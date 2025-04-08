@@ -253,6 +253,7 @@ export default {
       logout(this.ruleForm).then((response) => {
         removeToken();
       });
+      sessionStorage.clear("userId");
       window.location.reload();
     },
     // 跳转个人中心页面

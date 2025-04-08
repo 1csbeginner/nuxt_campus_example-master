@@ -26,9 +26,6 @@ export default {
     getImg(img) {
       return shopApi.getProductImg(img);
     },
-    confirmReceive() {
-      this.$emit('confirm-receive', this.order.id);
-    },
   },
 };
 </script>

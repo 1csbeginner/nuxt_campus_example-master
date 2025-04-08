@@ -11,21 +11,34 @@
       <div class="product-info">
         <h2 class="product-title">{{ product.name }}</h2>
         <p class="product-price">￥{{ product.price }}</p>
-        <p class="product-stock">库存: {{ product.stock || 0 }} 件</p>
-        <p class="product-introduce">{{ product.introduce }}</p>
-        <p class="product-desc">{{ product.description }}</p>
+
+        <!-- 库存信息 -->
+        <p v-if="product.stock > 0" class="product-stock">库存: {{ product.stock }} 件</p>
+        <p v-else class="out-of-stock">此商品暂时缺货</p>
 
         <!-- 数量选择 -->
-        <div class="quantity-selector">
-          <button @click="decreaseQuantity">-</button>
+        <div class="quantity-selector" v-if="product.stock > 0">
+          <button @click="decreaseQuantity" :disabled="quantity <= 1">-</button>
           <span>{{ quantity }}</span>
-          <button @click="increaseQuantity">+</button>
+          <button @click="increaseQuantity" :disabled="quantity >= product.stock">+</button>
         </div>
 
         <!-- 按钮 -->
         <div class="btn-group">
-          <el-button type="warning" @click="buyNow">立即购买</el-button>
-          <el-button type="primary" @click="addToCart">加入购物车</el-button>
+          <el-button
+            type="warning"
+            @click="buyNow"
+            :disabled="product.stock <= 0"
+          >
+            立即购买
+          </el-button>
+          <el-button
+            type="primary"
+            @click="addToCart"
+            :disabled="product.stock <= 0"
+          >
+            加入购物车
+          </el-button>
         </div>
       </div>
     </div>
@@ -106,11 +119,13 @@ export default {
     buyNow() {
       const orderData = [
         {
+          cartId: null, // 立即购买时不需要购物车ID
           id: this.productId, // 注意 id 字段要和支付页对应
           image: this.product.image,
           name: this.product.name,
           price: this.product.price,
           quantity: this.quantity,
+          stock: this.product.stock,
         },
       ];
       // 存储订单信息到 sessionStorage
@@ -189,10 +204,11 @@ export default {
   color: #555;
 }
 
-.product-desc {
+.out-of-stock {
+  font-size: 16px;
+  color: red;
+  font-weight: bold;
   margin-top: 10px;
-  font-size: 14px;
-  color: #666;
 }
 
 .quantity-selector {
@@ -205,6 +221,12 @@ export default {
   padding: 5px 10px;
   font-size: 18px;
   cursor: pointer;
+}
+
+.quantity-selector button:disabled {
+  background-color: #f5f5f5;
+  color: #aaa;
+  cursor: not-allowed;
 }
 
 .quantity-selector span {
@@ -220,5 +242,11 @@ export default {
   margin-right: 10px;
   padding: 12px 30px;
   font-size: 16px;
+}
+
+.btn-group .el-button:disabled {
+  background-color: #f5f5f5;
+  color: #aaa;
+  cursor: not-allowed;
 }
 </style>

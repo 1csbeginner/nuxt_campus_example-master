@@ -18,7 +18,7 @@
         layout="prev, pager, next"
         :total="total"
         :current-page="currentPage"
-        :page-size="10"
+        :page-size="5"
         @current-change="handleCurrentChange"
       />
     </div>
@@ -61,6 +61,7 @@ export default {
         console.log("订单列表：", response);
         this.orderList = response.rows.map((item) => ({
           id: item.id,
+          price: item.price,
           createTime: item.createTime,
           quantity: item.quantity,
           isFinished: item.isFinished,

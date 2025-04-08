@@ -15,6 +15,7 @@
         <h3>{{ order.product.name }}</h3>
         <p>价格：¥{{ order.product.price }}</p>
         <p>数量：{{ order.quantity }}</p>
+        <h4>总价： ￥{{ order.price }}</h4>
         <p>状态：{{ order.isFinished === 1 ? '已完成' : '待收货' }}</p>
       </div>
       <div class="order-actions">
