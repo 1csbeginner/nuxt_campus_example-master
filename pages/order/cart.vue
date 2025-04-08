@@ -119,8 +119,19 @@ export default {
         });
     },
     checkout() {
-      // 结算逻辑
-      console.log('结算');
+      // 获取选中商品的信息
+      const selectedItems = this.cartItems.filter(item => item.selected);
+
+      if (selectedItems.length === 0) {
+        this.$message.error("请选择要结算的商品！");
+        return;
+      }
+
+      // 将选中商品的信息存储到 sessionStorage
+      sessionStorage.setItem("tempOrder", JSON.stringify(selectedItems));
+
+      // 跳转到支付页面
+      this.$router.push("/pay");
     },
     // 获取购物车商品列表
     getCartItems(cartFilter) {

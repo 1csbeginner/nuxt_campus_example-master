@@ -2,7 +2,7 @@
   <div class="cart-summary">
     <p>已选商品：{{ totalCount }}件</p>
     <p>总价：¥{{ totalPrice }}</p>
-    <button @click="checkout" :disabled="!isAllSelected">结算</button>
+    <button @click="checkout" :disabled="totalCount === 0">结算</button>
   </div>
 </template>
 

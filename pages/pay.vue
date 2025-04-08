@@ -1,5 +1,6 @@
 <template>
   <div class="pay-page">
+    <AddressCard :address="selectedAddress" />
     <el-card class="order-card">
       <h2>订单信息</h2>
       <div class="order-details">
@@ -43,15 +44,19 @@
 
 <script>
 import PayItem from "@/components/PayItem.vue";
+import AddressCard from "@/components/AddressCard.vue"; // 假设有一个地址卡片组件
+import userInfoApi from "@/api/userInfo"
 
 export default {
   components: {
     PayItem,
+    AddressCard,
   },
   data() {
     return {
       orders: [], // 初始化为空数组
       selectedPayment: "支付宝", // 默认支付方式
+      selectedAddress: null, // 假设有一个地址数据
     };
   },
   computed: {
@@ -67,9 +72,9 @@ export default {
       const stored = sessionStorage.getItem("tempOrder");
       if (stored) {
         this.orders = JSON.parse(stored);
-        console.log("orders", this.orders);
       }
     }
+    this.fetchAddress();
   },
   methods: {
     confirmPayment() {
@@ -77,11 +82,38 @@ export default {
         this.$message.error("请选择支付方式！");
         return;
       }
+      if(!this.selectedAddress) {
+        this.$message.error("请先选择收货地址！");
+        return;
+      }
       this.$message.success(`使用 ${this.selectedPayment} 支付成功！`);
       // 模拟支付成功后的跳转
       setTimeout(() => {
         this.$router.push("/order-success"); // 假设有一个订单成功页面
       }, 1000);
+    },
+    async fetchAddress() {
+      try {
+        // 调用 userinfo API 获取地址数据
+        const response = await userInfoApi.getUserProfile(); // 假设这个 API 返回用户信息
+
+        // 假设地址信息在 response.data.addresses 中
+        const addresses = response.data;
+
+        // 筛选出需要的字段
+        if (addresses) {
+          this.selectedAddress = {
+            userName: addresses.userName,
+            phonenumber: addresses.phonenumber,
+            address: addresses.address,
+          };
+        } else {
+          this.selectedAddress = null; // 如果没有地址，设置为 null
+        }
+      } catch (error) {
+        console.error("获取用户信息失败:", error);
+        this.$message.error("获取用户信息失败，请稍后重试！");
+      }
     },
     handleConfirmReceive(orderId) {
       console.log(`确认收货，订单ID: ${orderId}`);

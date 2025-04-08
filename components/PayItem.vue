@@ -57,7 +57,7 @@ export default {
   align-items: center;
 }
 
-.order-img {
+.order-body img {
   width: 100px;
   height: 100px;
   object-fit: cover;
