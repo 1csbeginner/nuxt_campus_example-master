@@ -23,9 +23,17 @@ export default {
 
 <style scoped>
 .cart-summary {
+  position: fixed; /* 固定定位 */
+  bottom: 0; /* 距离页面底部 0 */
+  left: 50%; /* 水平居中 */
+  transform: translateX(-50%); /* 水平居中偏移 */
+  max-width: 1200px; /* 设置最大宽度，与主页内容一致 */
+  width: 100%; /* 在小屏幕下占满宽度 */
+  background-color: #fff; /* 背景色 */
+  border-top: 1px solid #ddd; /* 添加顶部边框 */
   padding: 16px;
-  background-color: #f9f9f9;
-  border-top: 1px solid #ddd;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1); /* 添加阴影效果 */
+  z-index: 1000; /* 确保在其他内容之上 */
   text-align: center;
 }
 
