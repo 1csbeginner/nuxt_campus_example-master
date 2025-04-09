@@ -88,7 +88,7 @@ export default {
         }
 
         // 调用 API 获取购物车中该商品的详细信息
-        const response = await shopApi.getList('shoppinglist', { createUser: userId, productId: this.productId });
+        const response = await shopApi.getCartList({ createUser: userId, productId: this.productId });
 
         // 从 rows 中找到与当前 productId 匹配的商品
         const productInCart = response.rows.find(item => item.productId === this.productId);

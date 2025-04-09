@@ -4,11 +4,18 @@ const api_name = `/api/shop`
 
 export default {
     //获取商品列表
-    getList(req, data) {
+    getList(req, filter, data) {
       return request({
-        url: `campus/${req}/list`,
+        url: `campus/${req}/list/${filter.pageNum}/${filter.pageSize}`, // 拼接分页参数到路径
         method: 'put',
-        data: data
+        data: data, // 其他过滤条件仍然通过请求体传递
+      });
+    },
+    getCartList(data) {
+      return request({
+        url: `campus/shoppinglist/list`, // 拼接分页参数到路径
+        method: 'put',
+        data: data, // 其他过滤条件仍然通过请求体传递
       });
     },
 

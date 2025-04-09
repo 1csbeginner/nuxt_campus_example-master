@@ -67,12 +67,14 @@ export default {
       sellItems: [], // 商品数据
       sellFilter: {
         pageNum: 1,
+        pageSize: 10,
       },
       currentPage: 1,
       mainMinHeight: "",
       userId: 0,
       productDialogVisible: false, // 控制添加/修改商品弹窗的显示
       currentProduct: null, // 当前商品数据
+      total: 0,
     };
   },
   methods: {
@@ -147,7 +149,7 @@ export default {
     // 获取商品列表
     getsellItems(sellFilter) {
       shopApi
-        .getList("product", { ...sellFilter, createUser: this.userId })
+        .getList("product", sellFilter, { createUser: this.userId })
         .then((response) => {
           this.sellItems = response.rows.map((item) => ({
             id: item.id,
@@ -157,6 +159,8 @@ export default {
             introduce: item.introduce,
             stock: item.stock,
           }));
+          this.total = parseInt(response.total);
+          this.loading = false;
         })
         .catch((error) => {
           console.error("获取商品数据失败", error);
@@ -172,7 +176,7 @@ export default {
     shopApi.getUserId().then((userId) => {
       if (userId) {
         this.userId = userId;
-        this.getsellItems(); // 现在 userId 可用了
+        this.getsellItems(this.sellFilter); // 现在 userId 可用了
       }
     });
   },

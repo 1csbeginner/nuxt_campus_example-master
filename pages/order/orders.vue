@@ -18,7 +18,7 @@
         layout="prev, pager, next"
         :total="total"
         :current-page="currentPage"
-        :page-size="5"
+        :page-size="10"
         @current-change="handleCurrentChange"
       />
     </div>
@@ -47,7 +47,7 @@ export default {
     shopApi.getUserId().then(userId => {
       if (userId) {
         this.userId = userId
-        this.getOrderList()
+        this.getOrderList(this.orderFilter)
       }
     })
   },
@@ -57,8 +57,8 @@ export default {
   },
   methods: {
     getOrderList(filter) {
-      shopApi.getList("shoppingorder", { ...filter, createUser: this.userId}).then((response) => {
-        console.log("订单列表：", response);
+      shopApi.getList("shoppingorder", filter, { createUser: this.userId}).then((response) => {
+        console.log(filter)
         this.orderList = response.rows.map((item) => ({
           id: item.id,
           price: item.price,
@@ -72,7 +72,7 @@ export default {
     },
     handleCurrentChange(val) {
       this.orderFilter.pageNum = val;
-      this.currentPage = val;
+      this.currentPage = this.orderFilter.pageNum;
       this.getOrderList(this.orderFilter);
     },
     handleConfirmReceive(orderId) {
@@ -144,3 +144,4 @@ export default {
   margin-top: 20px;
 }
 </style>
+

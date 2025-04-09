@@ -20,18 +20,6 @@
         @remove-item="removeItem"
       />
     </div>
-    <!-- 分页 -->
-    <div class="fenye" v-if="!loading && cartItems.length > 0">
-      <el-pagination
-        :hide-on-single-page="true"
-        background
-        layout="prev, pager, next"
-        :total="total"
-        :current-page="currentPage"
-        :page-size="10"
-        @current-change="handleCurrentChange"
-      />
-    </div>
     <!-- 购物车汇总 -->
     <CartSummary
       :total-price="totalPrice"
@@ -56,10 +44,6 @@ export default {
   data() {
     return {
       cartItems: [],      // 购物车商品数据
-      cartFilter: {
-        pageNum: 1,
-      },
-      currentPage: 1,
       mainMinHeight: "",
       userId: 0,
     };
@@ -143,7 +127,7 @@ export default {
     // 获取购物车商品列表
     getCartItems(cartFilter) {
       shopApi
-        .getList('shoppinglist', { ...cartFilter, createUser: this.userId})
+        .getCartList({ createUser: this.userId})
         .then((response) => {
           this.cartItems = response.rows.map((item) => ({
             id: item.id,
@@ -159,11 +143,6 @@ export default {
         .catch((error) => {
           console.error('获取购物车数据失败', error);
         });
-    },
-    handleCurrentChange(val) {
-      this.cartFilter.pageNum = val;
-      this.currentPage = this.cartFilter.pageNum;
-      this.getCartItems(this.cartFilter);
     },
     getUserId() {
       userInfoApi.getUserProfile().then((response) => {

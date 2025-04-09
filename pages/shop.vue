@@ -2,28 +2,31 @@
   <div class="shop-bg woo-box-flex">
     <div class="shop-main">
       <ShopNaviBar />
-      <div class="woo-box-flex" :style="{ 'min-height': mainMinHeight + 'px' }">
-          <!-- 商品内容 -->
+      <div class="shop-content" :style="{ 'min-height': mainMinHeight + 'px' }">
+        <!-- 商品列表 -->
+        <div class="product-list">
           <ProductCard
             v-for="(item, key) in productList"
             :key="key"
             :productObj="item"
           />
-          <!-- 分页 -->
-          <div class="fenye" v-if="!loading">
-            <el-pagination
-              :hide-on-single-page="true"
-              background
-              layout="prev, pager, next"
-              :total="total"
-              :current-page="currentPage"
-              :page-size="10"
-              @current-change="handleCurrentChange"
-            />
-          </div>
+        </div>
+
+        <!-- 分页 -->
+        <div class="fenye" v-if="!loading">
+          <el-pagination
+            :hide-on-single-page="true"
+            background
+            layout="prev, pager, next"
+            :total="total"
+            :current-page="currentPage"
+            :page-size="10"
+            @current-change="handleCurrentChange"
+          />
         </div>
       </div>
     </div>
+  </div>
 </template>
 
 <script>
@@ -77,7 +80,7 @@ export default {
     getProducts(shopFilter) {
       this.loading = true;
       shopApi
-        .getList('product', shopFilter)
+        .getList('product', shopFilter, {})
         .then((response) => {
           this.productList = response.rows.map((item) => ({
             id: item.id,
@@ -105,29 +108,36 @@ export default {
 
 <style>
 .shop-bg {
-  border-right: 1px solid rgba(255, 255, 255, 0.2);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
   border-radius: 10px;
-  max-width: 1122px;
+  max-width: 1200px;
   margin: auto;
 }
+
 .shop-main {
   flex: 1;
   padding: 20px;
-}
-.fenye {
   width: 100%;
-  margin: 0 auto;
-  text-align: center;
 }
-.content-t {
-  margin: 20px 0 0 0;
+
+.shop-content {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
 }
+
 .product-list {
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
-  justify-content: center;
+  justify-content: flex-start; /* 可改为 center */
+}
+
+.fenye {
+  text-align: center;
+  margin-top: 20px;
 }
 
 </style>
