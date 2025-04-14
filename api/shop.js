@@ -89,6 +89,16 @@ export default {
             data: data
         })
     },
+    submitReview(orderId, review){
+        return request({
+            url: `campus/shoppingorder/comment`,
+            method: 'put',
+            data:{
+                id: orderId,
+                bcomment: review
+            }
+        })
+    },
 
     async getUserId() {
     let userId = sessionStorage.getItem(USER_ID_KEY)
