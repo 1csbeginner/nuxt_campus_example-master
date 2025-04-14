@@ -6,20 +6,16 @@
     </div>
 
     <div class="order-body">
-      <img
-        :src="getImg(order.product.image)"
-        alt="商品图片"
-        class="order-img"
-      />
+      <img :src="getImg(order.product.image || order.image)" alt="商品图片" class="order-img" />
       <div class="order-info">
         <h3>{{ order.product.name }}</h3>
         <p>价格：¥{{ order.product.price }}</p>
         <p>数量：{{ order.quantity }}</p>
-        <h4>总价： ￥{{ order.price }}</h4>
+        <h4>总价：￥{{ order.price }}</h4>
         <p>状态：{{ order.isFinished === 1 ? '已完成' : '待收货' }}</p>
       </div>
+
       <div class="order-actions">
-        <!-- 确认收货按钮 -->
         <el-button
           v-if="order.isFinished === 0"
           type="primary"
@@ -29,9 +25,9 @@
           确认收货
         </el-button>
 
-        <!-- 去评价按钮 -->
+        <!-- 如果订单已完成，未评价 -->
         <el-button
-          v-if="order.isFinished === 1 && !isReviewing"
+          v-if="order.isFinished === 1 && !order.bcomment && !isReviewing"
           type="success"
           size="small"
           @click="startReview"
@@ -41,10 +37,16 @@
       </div>
     </div>
 
-    <!-- 显示评论框 -->
+    <!-- 已评价：展示评论内容 + 修改按钮 -->
+    <div v-if="order.bcomment && !isReviewing" class="review-section">
+      <p><strong>我的评价：</strong>{{ order.bcomment }}</p>
+      <el-button type="text" size="small" @click="editReview">修改评价</el-button>
+    </div>
+
+    <!-- 正在编辑或首次评价 -->
     <div v-if="isReviewing" class="review-section">
       <el-input
-        v-model="reviewContent"
+        v-model="reviewInput"
         type="textarea"
         placeholder="请输入您的评价..."
         rows="4"
@@ -58,7 +60,6 @@
       >
         提交评价
       </el-button>
-
       <el-button
         type="text"
         size="small"
@@ -71,55 +72,64 @@
 </template>
 
 <script>
-import shopApi from "@/api/shop";
+  import shopApi from "@/api/shop";
 
-export default {
-  props: {
-    order: Object,
-  },
-  data() {
-    return {
-      isReviewing: false, // 控制评价框是否显示
-      reviewContent: "",  // 存储评价内容
-      isSubmitting: false, // 控制提交按钮的加载状态
-    };
-  },
-  methods: {
-    getImg(img) {
-      return shopApi.getProductImg(img);
+  export default {
+    props: {
+      order: Object,
     },
-    confirmReceive() {
-      this.$emit('confirm-receive', this.order.id);
+    data() {
+      return {
+        isReviewing: false,
+        reviewInput: "",
+        isSubmitting: false,
+      };
     },
-    startReview() {
-      this.isReviewing = true; // 显示评论框
-    },
-    cancelReview() {
-      this.isReviewing = false; // 隐藏评论框，恢复显示去评价按钮
-      this.reviewContent = "";  // 清空评论内容
-    },
-    submitReview() {
-      if (!this.reviewContent.trim()) {
-        this.$message.warning("评价内容不能为空！");
-        return;
-      }
+    methods: {
+      getImg(img) {
+        return shopApi.getProductImg(img);
+      },
+      confirmReceive() {
+        this.$emit("confirm-receive", this.order.id);
+      },
+      startReview() {
+        this.reviewInput = "";
+        this.isReviewing = true;
+      },
+      editReview() {
+        this.reviewInput = this.order.bcomment;
+        this.isReviewing = true;
+      },
+      cancelReview() {
+        this.isReviewing = false;
+        this.reviewInput = "";
+      },
+      submitReview() {
+        if (!this.reviewInput.trim()) {
+          this.$message.warning("评价内容不能为空！");
+          return;
+        }
 
-      this.isSubmitting = true; // 启动加载状态
-      // 假设提交评价的 API 为 shopApi.submitReview
-      shopApi.submitReview(this.order.id, this.reviewContent)
-        .then(() => {
-          this.isSubmitting = false;
-          this.$message.success("评价提交成功！");
-          this.isReviewing = false; // 隐藏评论框
-          this.reviewContent = ""; // 清空评论内容
-        })
-        .catch(() => {
-          this.isSubmitting = false;
-          this.$message.error("评价提交失败，请稍后再试！");
-        });
+        this.isSubmitting = true;
+
+        // 发送修改后的评论内容
+        shopApi.submitReview(this.order.id, this.reviewInput)
+          .then(() => {
+            this.isSubmitting = false;
+            this.$message.success("评价提交成功！");
+            this.isReviewing = false;
+
+            // 通知父组件刷新评论内容（父组件需要更新 orderList）
+            this.$emit("refresh-order", this.order.id);
+          })
+          .catch(() => {
+            this.isSubmitting = false;
+            this.$message.error("提交失败，请稍后再试！");
+          });
+      },
     },
-  },
-};
+  };
+
 </script>
 
 <style scoped>

@@ -8,6 +8,7 @@
       :key="index"
       :order="order"
       @confirm-receive="handleConfirmReceive"
+      @refresh-order="refreshSingleOrder"
     />
 
     <!-- 分页 -->
@@ -66,6 +67,8 @@ export default {
           quantity: item.quantity,
           isFinished: item.isFinished,
           product: item.product,
+          bcomment: item.bcomment,
+          pcomment: item.pcomment,
         }));
         this.total = parseInt(response.total);
       });
@@ -77,7 +80,7 @@ export default {
     },
     handleConfirmReceive(orderId) {
       shopApi.finishOrder(orderId).then(() => {
-        this.getOrderList(this.orderFilter);
+        this.refreshSingleOrder(orderId)
       });
     },
     getImg(path) {
@@ -86,6 +89,18 @@ export default {
     getUserId(){
       userInfoApi.getUserProfile().then((response) => {
         this.userId = response.userId;
+      });
+    },
+    refreshSingleOrder(orderId) {
+      shopApi.getDetail("shoppingorder", orderId).then((res) => {
+        const updated = res.data;
+        const idx = this.orderList.findIndex(o => o.id === orderId);
+        if (idx !== -1) {
+          // 只更新特定字段，而不是替换整个对象
+          this.orderList[idx].isFinished = updated.isFinished;
+          this.orderList[idx].bcomment = updated.bcomment;
+          this.orderList[idx].pcomment = updated.pcomment;
+        }
       });
     }
   }

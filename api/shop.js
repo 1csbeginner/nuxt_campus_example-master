@@ -19,9 +19,9 @@ export default {
       });
     },
 
-    getProductDetail(id) {
+    getDetail(req, id) {
         return request({
-            url: `campus/product/${id}`,
+            url: `campus/${req}/${id}`,
             method: 'get',
         })
     },
