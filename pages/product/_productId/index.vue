@@ -42,12 +42,23 @@
         </div>
       </div>
     </div>
+    <ProductCommentCard
+      v-for="(comment, index) in product.comments"
+      :key="index"
+      :comment="comment"
+      :getImg="getImg"
+      :productId="productId"
+      :userId="userId"
+      :isReviewing="isReviewing"
+      :isSubmitting="isSubmitting"
+    />
   </div>
 </template>
 
 <script>
 import shopApi from "@/api/shop";
 import ShopNaviBar from "@/components/ShopNaviBar";
+import ProductCommentCard from "@/components/ProductCommentCard.vue";
 
 export default {
   data() {
@@ -58,7 +69,8 @@ export default {
     };
   },
   components: {
-    ShopNaviBar
+    ShopNaviBar,
+    ProductCommentCard
   },
   created() {
     this.loadCartCount();
@@ -70,7 +82,7 @@ export default {
       if (!this.productId) return;
 
       try {
-        const response = await shopApi.getProductDetail(this.productId);
+        const response = await shopApi.getDetail("product", this.productId);
         this.product = response.data;
       } catch (error) {
         console.error("加载商品详情失败", error);
