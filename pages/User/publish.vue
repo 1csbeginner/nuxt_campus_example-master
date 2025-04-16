@@ -14,7 +14,7 @@
             ></el-input>
 
             <!-- 求助选项 -->
-            <el-checkbox v-model="contentParam.isHelp" label="求助">求助</el-checkbox>
+            <el-checkbox v-model="contentParam.need_help" label="求助">求助</el-checkbox>
 
             <!-- 匿名发布选项 -->
             <el-checkbox v-model="contentParam.isAnonymous" label="匿名发布">匿名发布</el-checkbox>
@@ -118,9 +118,9 @@ export default {
         categoryId: "",
         type: 0,
         isAnonymous: 0,  // 匿名发布字段
+        need_help: 0,// 求助字段
         content: "",
         fileList: [],
-        isHelp: 0,  // 求助字段
       },
       disabled: {
         picture: false,
@@ -293,6 +293,7 @@ export default {
 
       // 将布尔值转换为整数
       this.contentParam.isAnonymous = this.contentParam.isAnonymous ? 1 : 0;
+      this.contentParam.need_help = this.contentParam.need_help ? 1 : 0;
 
       // 发布时传递转换后的匿名状态
       operateApi.publishContent(this.contentParam).then((response) => {
