@@ -301,7 +301,6 @@ export default {
         .then((response) => {
           //请求成功response是接口返回数据
           //返回集合赋值list
-          console.log(response)
           this.contentList = response.rows;
           console.log(contentList)
           //总记录数
