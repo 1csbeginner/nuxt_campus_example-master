@@ -22,6 +22,9 @@
           <div class="content-category-tag">
             <div>{{ contentObj.params.categoryName }}</div>
           </div>
+          <div class="content-help-tag" v-if="contentObj.need_help === 1">
+            <div>求助</div>
+          </div>
           <span class="content-box-time">
             {{ parseTime(contentObj.createTime, "{y}-{m}-{d} {h}:{i}") }}
           </span>
@@ -159,5 +162,18 @@ export default {
 
 .content-box-avatar {
   margin-right: 10px;
+}
+
+.content-help-tag{
+  margin-right: 4px;
+  font-size: 12px;
+  display: inline-block;
+  min-width: 26px;
+  height: 13px;
+  border-radius: 2px;
+  line-height: 13px;
+  color:white;
+  background-color: rgb(227, 82, 82);
+  text-align: center;
 }
 </style>
