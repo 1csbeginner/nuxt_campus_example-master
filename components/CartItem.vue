@@ -10,10 +10,11 @@
       <p class="cart-item-name">{{ item.name }}</p>
       <p class="cart-item-price">¥{{ item.price }}</p>
       <div class="cart-item-quantity">
-        <button @click.stop="decreaseQuantity" :disabled="isDecreaseDisabled">-</button>
+        <button @click.stop="decreaseQuantity" :disabled="isDecreaseDisabled || item.stock === 0">-</button>
         <span>{{ item.quantity }}</span>
-        <button @click.stop="increaseQuantity" :disabled="isIncreaseDisabled">+</button>
+        <button @click.stop="increaseQuantity" :disabled="isIncreaseDisabled || item.stock === 0">+</button>
       </div>
+      <p v-if="item.stock === 0" class="out-of-stock">商品缺货</p> <!-- 显示缺货提示 -->
     </div>
     <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
     <button @click.stop="removeItem">删除</button>
@@ -35,10 +36,10 @@ export default {
   },
   computed: {
     isDecreaseDisabled() {
-      return this.item.quantity <= 1;
+      return this.item.quantity <= 1 || this.item.stock === 0;
     },
     isIncreaseDisabled() {
-      return this.item.quantity >= this.item.stock;
+      return this.item.quantity >= this.item.stock || this.item.stock === 0;
     },
   },
   methods: {
@@ -181,5 +182,12 @@ button:disabled {
   margin-top: 8px;
   font-weight: bold;
   text-align: left;
+}
+
+/* 缺货提示 */
+.out-of-stock {
+  color: red;
+  font-size: 14px;
+  font-weight: bold;
 }
 </style>

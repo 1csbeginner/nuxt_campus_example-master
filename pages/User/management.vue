@@ -77,7 +77,14 @@
             label="分类名"
           />
 
-          <el-table-column prop="content" width="500" label="内容" />
+          <el-table-column prop="content" width="500" label="内容">
+            <template slot-scope="scope">
+              <span>
+                {{ scope.row.content }}
+                <span v-if="scope.row.need_help === 1" style="color: red; font-weight: bold;">[求助]</span>
+              </span>
+            </template>
+          </el-table-column>
 
           <el-table-column label="状态" width="80">
             <template slot-scope="scope">
@@ -110,14 +117,6 @@
             align="center"
           >
             <template slot-scope="scope">
-              <!-- <el-button
-                @click="lookByCid(scope.row.content)"
-                style="margin-left: 10px"
-                type="text"
-                size="small"
-                icon="el-icon-view"
-                >查看</el-button
-              > -->
               <el-button
                 style="color: red"
                 type="text"
@@ -126,13 +125,6 @@
                 @click="dialogOpen(scope.row.contentId)"
                 >删除</el-button
               >
-              <!-- <el-button -->
-                <!-- size="mini" -->
-                <!-- type="text" -->
-                <!-- icon="el-icon-edit" -->
-                <!-- @click="handleUpdate(scope.row)" -->
-                <!-- >修改</el-button -->
-              <!-- > -->
             </template>
           </el-table-column>
         </el-table>
@@ -198,7 +190,8 @@ export default {
         content: "",
         status: null,
         type: null,
-        isAnonymous: null
+        isAnonymous: null,
+        need_help: null
       },
       categoryOptions: [], // 确保选项数组存在
       dict: {

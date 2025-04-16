@@ -35,6 +35,7 @@ import CartItem from '@/components/CartItem.vue';
 import CartSummary from '@/components/CartSummary.vue';
 import shopApi from "@/api/shop"; // 确保调用正确的购物车API
 import ShopNaviBar from "@/components/ShopNaviBar"; // 导入导航栏组件
+
 export default {
   components: {
     CartItem,
@@ -115,6 +116,15 @@ export default {
           stock: item.stock,
           image: item.image,
         }));
+
+      // 检查是否有商品库存为0
+      const outOfStockItems = selectedItems.filter(item => item.stock === 0);
+      if (outOfStockItems.length > 0) {
+        const outOfStockNames = outOfStockItems.map(item => item.name).join(", ");
+        this.$message.error(`以下商品库存为 0，无法结算: ${outOfStockNames}`);
+        return;
+      }
+
       if (selectedItems.length === 0) {
         this.$message.error("请选择要结算的商品！");
         return;
