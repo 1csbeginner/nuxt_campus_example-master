@@ -97,7 +97,7 @@
 
           <el-table-column label="类型" width="100%">
             <template slot-scope="scope">{{
-              scope.row.type === 0 ? "不匿名" : "匿名"
+              scope.row.isAnonymous === 0 ? "不匿名" : "匿名"
             }}</template>
           </el-table-column>
 
@@ -170,64 +170,6 @@
         >
       </span>
     </el-dialog>
-
-    <!-- 添加或修改校园墙内容对话框
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="分类" prop="categoryId">
-          <el-input v-model="form.categoryId" placeholder="分类" />
-          <treeselect
-            v-model="form.categoryId"
-            :options="categoryOptions"
-            :disableBranchNodes="true"
-            :normalizer="normalizer"
-            :show-count="true"
-            placeholder="选择分类"
-          />
-        </el-form-item>
-        <el-form-item label="内容" prop="content">
-          <el-input
-            v-model="form.content"
-            type="textarea"
-            placeholder="请输入发表的内容"
-          />
-        </el-form-item>
-        <el-form-item label="状态">
-          <el-radio-group v-model="form.status">
-            <el-radio
-              v-for="dict in dict.type.campus_content_status"
-              :key="dict.value"
-              :label="parseInt(dict.value)"
-              >{{ dict.label }}</el-radio
-            >
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="类型" prop="type">
-          <el-select v-model="form.type" placeholder="请选择类型">
-            <el-option
-              v-for="dict in dict.type.campus_content_type"
-              :key="dict.value"
-              :label="dict.label"
-              :value="parseInt(dict.value)"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="匿名" prop="isAnonymous">
-          <el-select v-model="form.isAnonymous" placeholder="请选择匿名">
-            <el-option
-              v-for="dict in dict.type.campus_anonymous"
-              :key="dict.value"
-              :label="dict.label"
-              :value="parseInt(dict.value)"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
-        <el-button @click="cancel">取 消</el-button>
-      </div>
-    </el-dialog> -->
   </div>
 </template>
 
@@ -359,6 +301,7 @@ export default {
         .then((response) => {
           //请求成功response是接口返回数据
           //返回集合赋值list
+          console.log(response)
           this.contentList = response.rows;
           console.log(contentList)
           //总记录数
@@ -370,56 +313,6 @@ export default {
           //console.log("失败" + error);
         });
     },
-
-    // /** 修改按钮操作 */
-    // handleUpdate(row) {
-    //   this.reset();
-    //   this.form = row;
-    //   this.open = true;
-    //   this.title = "修改校园墙内容";
-    // },
-    // cancel() {
-    //   this.open = false;
-    //   this.reset();
-    // },
-    // // 表单重置
-    // reset() {
-    //   this.form = {
-    //     contentId: null,
-    //     userId: null,
-    //     categoryId: null,
-    //     content: null,
-    //     status: 0,
-    //     type: null,
-    //     fileNumber: null,
-    //     isAnonymous: null,
-    //     delFlag: null,
-    //     createTime: null,
-    //     createUser: null,
-    //     updateTime: null,
-    //     updateUser: null,
-    //   };
-    // },
-    // /** 提交按钮 */
-    // submitForm() {
-    //   this.$refs["form"].validate((valid) => {
-    //     if (valid) {
-    //       if (this.form.contentId != null) {
-    //         operateApi.modifyContent(this.form).then((response) => {
-    //           this.$modal.msgSuccess("修改成功");
-    //           this.open = false;
-    //           this.getList();
-    //         });
-    //       } else {
-    //         addContent(this.form).then((response) => {
-    //           this.$modal.msgSuccess("新增成功");
-    //           this.open = false;
-    //           this.getList();
-    //         });
-    //       }
-    //     }
-    //   });
-    // },
   },
 };
 </script>
