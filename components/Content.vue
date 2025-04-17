@@ -19,12 +19,16 @@
           </span>
         </div>
         <div class="box--flex">
-          <div class="content-category-tag">
-            <div>{{ contentObj.params.categoryName }}</div>
+          <div class="content-finish-tag" v-if="contentObj.bestanswer !== null">
+            <div>已解决</div>
           </div>
           <div class="content-help-tag" v-if="contentObj.needHelp === 1">
             <div>求助</div>
           </div>
+          <div class="content-category-tag">
+            <div>{{ contentObj.params.categoryName }}</div>
+          </div>
+
           <span class="content-box-time">
             {{ parseTime(contentObj.createTime, "{y}-{m}-{d} {h}:{i}") }}
           </span>
@@ -174,6 +178,18 @@ export default {
   line-height: 13px;
   color:white;
   background-color: rgb(227, 82, 82);
+  text-align: center;
+}
+.content-finish-tag{
+  margin-right: 4px;
+  font-size: 12px;
+  display: inline-block;
+  min-width: 26px;
+  height: 13px;
+  border-radius: 2px;
+  line-height: 13px;
+  color:white;
+  background-color: rgb(0, 159, 74);
   text-align: center;
 }
 </style>

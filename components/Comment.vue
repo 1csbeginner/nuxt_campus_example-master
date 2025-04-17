@@ -102,6 +102,15 @@
                 >
                   <svg-icon class="comment-tool-iconbed" icon-class="comment" />
                 </div>
+                <template v-if="contentObj.needHelp && contentObj.params.userId === loginUserId && contentObj.isFinished === 0 && contentObj.bestanswer === null">
+                  <!-- 添加最佳答案按钮 -->
+                  <div
+                    class="comment-iconbed woo-box-flex woo-box-alignCenter woo-box-justifyCenter"
+                    @click="setBestAnswer(contentObj, item.commentId)"
+                  >
+                    <svg-icon class="best-answer-btn" icon-class="pass" />
+                  </div>
+                </template>
               </div>
             </div>
           </div>
@@ -361,6 +370,21 @@ export default {
       this.commentOneLevelObj = commentObj;
       this.dialogChildren = true;
     },
+    setBestAnswer(contentObj, commentID){
+      const data = {
+        ...contentObj,
+        bestanswer: commentID,
+      }
+      console.log(data)
+      operateApi.modifyContent(data).then((response) => {
+        if (response.data === 1) {
+          this.$message.success("设置成功！");
+          this.getCommentList(this.currentPage);
+        } else {
+          this.$message.error("设置失败！");
+        }
+      });
+    }
   },
 };
 </script>
