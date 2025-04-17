@@ -70,6 +70,12 @@
                 style="background: rgb(254, 44, 85)"
                 ><span>作者</span>
               </span>
+              <span
+                class="comment-item-tag"
+                v-if="item.commentId == contentObj.bestanswer"
+                style="background: rgb(0, 159, 74)"
+                ><span>最佳答案</span>
+              </span>
             </div>
 
             <div style="margin-top: 4px">
@@ -284,7 +290,23 @@ export default {
       this.commentQuery.pageNum = currentPage;
       touristApi.getOneLevelComment(this.commentQuery).then((response) => {
         this.commentOneLevelList = this.handleTree(response.rows, "commentId");
-        //处理数据
+
+        // 将最佳答案置顶
+        const bestAnswerId = this.contentObj.bestanswer;
+        if (bestAnswerId) {
+          // 查找最佳答案
+          const bestAnswerIndex = this.commentOneLevelList.findIndex(
+            (item) => item.commentId === bestAnswerId
+          );
+
+          // 如果找到了最佳答案，调整顺序
+          if (bestAnswerIndex !== -1) {
+            const bestAnswerItem = this.commentOneLevelList.splice(bestAnswerIndex, 1)[0];
+            this.commentOneLevelList.unshift(bestAnswerItem);
+          }
+        }
+
+        // 处理子评论的计数
         for (let i = 0; i < this.commentOneLevelList.length; i++) {
           if (this.commentOneLevelList[i].children !== undefined) {
             this.commentOneLevelList[i].childrenCount--;
@@ -292,6 +314,7 @@ export default {
           Vue.set(this.commentOneLevelList, i, this.commentOneLevelList[i]);
         }
 
+        // 更新总评论数量
         this.commentTotal = parseInt(response.allTotal);
         this.total = parseInt(response.total);
       });
@@ -374,11 +397,14 @@ export default {
       const data = {
         ...contentObj,
         bestanswer: commentID,
+        isFinished: 1,
       }
       console.log(data)
       operateApi.modifyContent(data).then((response) => {
         if (response.data === 1) {
-          this.$message.success("设置成功！");
+          this.$message.success("已选最佳答案！");
+          contentObj.bestanswer = commentID;
+          contentObj.isFinished = 1;
           this.getCommentList(this.currentPage);
         } else {
           this.$message.error("设置失败！");
