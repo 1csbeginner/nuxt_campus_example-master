@@ -77,36 +77,38 @@ export default {
     this.fetchAddress();
   },
   methods: {
-      async confirmPayment() {
-        if (!this.selectedPayment) {
-          this.$message.error("请选择支付方式！");
-          return;
-        }
-        if (!this.selectedAddress) {
-          this.$message.error("请先选择收货地址！");
-          return;
-        }
+    async confirmPayment() {
+      if (!this.selectedPayment) {
+        this.$message.error("请选择支付方式！");
+        return;
+      }
 
-        try {
-          // 循环发送商品信息
-          for (const order of this.orders) {
-            await this.sendOrderToApi(order);
-            // 发送成功后，删除购物车中的商品
-            if(order.cartId !== null) {
-              await this.removeCartItem(order.cartId);
-            }
+      // 检查地址是否有效
+      if (!this.selectedAddress || !this.selectedAddress.address) {
+        this.$message.error("请先选择收货地址！");
+        return;
+      }
+
+      try {
+        // 循环发送商品信息
+        for (const order of this.orders) {
+          await this.sendOrderToApi(order);
+          // 发送成功后，删除购物车中的商品
+          if(order.cartId !== null) {
+            await this.removeCartItem(order.cartId);
           }
-
-          // 模拟支付成功后的跳转
-          setTimeout(() => {
-            this.$message.success("支付成功！");
-            this.$router.push("/order/orders"); // 假设有一个订单成功页面
-          }, 1000);
-        } catch (error) {
-          console.error("订单发送失败:", error);
-          this.$message.error("订单发送失败，请稍后重试！");
         }
-      },
+
+        // 模拟支付成功后的跳转
+        setTimeout(() => {
+          this.$message.success("支付成功！");
+          this.$router.push("/order/orders"); // 假设有一个订单成功页面
+        }, 1000);
+      } catch (error) {
+        console.error("订单发送失败:", error);
+        this.$message.error("订单发送失败，请稍后重试！");
+      }
+    },
 
     async sendOrderToApi(order) {
       try {
