@@ -22,7 +22,7 @@
           <div class="content-category-tag">
             <div>{{ contentObj.params.categoryName }}</div>
           </div>
-          <div class="content-help-tag" v-if="contentObj.need_help === 1">
+          <div class="content-help-tag" v-if="contentObj.needHelp === 1">
             <div>求助</div>
           </div>
           <span class="content-box-time">

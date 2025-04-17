@@ -42,14 +42,14 @@
       </div>
       <!-- 关闭问题按钮：只有求助帖并且当前用户是发帖人且问题未关闭时显示 -->
       <div
-        v-if="contentObj.params.userId === this.loginUserId && contentObj.need_help === 1"
+        v-if="contentObj.params.userId === this.loginUserId && contentObj.needHelp === 1"
         class="woo-box-item-flex"
-        :class="{ disabled: contentObj.is_finished === 1 }"
-        @click="contentObj.is_finished === 1 ? null : closeQuestion(contentObj)"
+        :class="{ disabled: contentObj.isFinished === 1 }"
+        @click="contentObj.isFinished === 1 ? null : closeQuestion(contentObj)"
       >
         <div class="content-bottom-hover woo-box-flex woo-box-alignCenter woo-box-justifyCenter">
           <div class="woo-pop-wrap">
-            <span>{{ contentObj.is_finished === 1 ? "问题已关闭" : "关闭问题" }}</span>
+            <span>{{ contentObj.isFinished === 1 ? "问题已关闭" : "关闭问题" }}</span>
           </div>
         </div>
       </div>
@@ -165,7 +165,7 @@ export default {
     closeQuestion(contentObj) {
       const data = {
         ...contentObj,
-        is_finished: 1, // 2表示已关闭
+        isFinished: 1, // 2表示已关闭
       };
       console.log("关闭问题数据：", data);
 
@@ -173,7 +173,7 @@ export default {
         if (response.data === 1) {
           this.$message.success("问题已关闭！");
           // 更新问题状态，例如用 2 表示问题已关闭
-          this.contentObj.is_finished = 1;
+          this.contentObj.isFinished = 1;
         } else {
           this.$message.error("关闭问题失败！");
         }

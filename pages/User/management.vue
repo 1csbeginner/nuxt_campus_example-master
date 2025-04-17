@@ -81,7 +81,7 @@
             <template slot-scope="scope">
               <span>
                 {{ scope.row.content }}
-                <span v-if="scope.row.need_help === 1" style="color: red; font-weight: bold;">[求助]</span>
+                <span v-if="scope.row.needHelp === 1" style="color: red; font-weight: bold;">[求助]</span>
               </span>
             </template>
           </el-table-column>
@@ -191,7 +191,7 @@ export default {
         status: null,
         type: null,
         isAnonymous: null,
-        need_help: null
+        needHelp: null
       },
       categoryOptions: [], // 确保选项数组存在
       dict: {
