@@ -21,7 +21,7 @@ export default {
     //修改发布的信息
     modifyContent(data) {
         return request({
-            url: `campus/modifyContent`,
+            url: `admin/content`,
             method: 'put',
             data: data
         })

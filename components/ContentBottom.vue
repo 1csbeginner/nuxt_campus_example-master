@@ -24,7 +24,6 @@
         >
           <div class="woo-pop-wrap">
             <img width="20" height="20" src="~/assets/images/pinlun.png" />
-            <!-- <svg-icon style="width: 18; height: 18" icon-class="comment" /> -->
             <span>评论</span>
           </div>
         </div>
@@ -38,6 +37,19 @@
           <div class="woo-pop-wrap">
             <img width="20" height="20" :src="zanImg" />
             <span class="zan-num">{{ contentObj.loveCount }}</span>
+          </div>
+        </div>
+      </div>
+      <!-- 关闭问题按钮：只有求助帖并且当前用户是发帖人且问题未关闭时显示 -->
+      <div
+        v-if="contentObj.params.userId === this.loginUserId && contentObj.need_help === 1"
+        class="woo-box-item-flex"
+        :class="{ disabled: contentObj.is_finished === 1 }"
+        @click="contentObj.is_finished === 1 ? null : closeQuestion(contentObj)"
+      >
+        <div class="content-bottom-hover woo-box-flex woo-box-alignCenter woo-box-justifyCenter">
+          <div class="woo-pop-wrap">
+            <span>{{ contentObj.is_finished === 1 ? "问题已关闭" : "关闭问题" }}</span>
           </div>
         </div>
       </div>
@@ -65,30 +77,27 @@ import Comment from "@/components/Comment";
 export default {
   name: "ContentBottom",
   props: ["zanBoolean", "contentObj"],
-  //import引入的组件需要注入到对象中才能使用
   components: { Comment },
   data() {
-    //这里存放数据
     return {
-      //点赞/没点赞的图片地址
       zanImg: "",
-      //是否显示评论
       showComment: false,
       isZanBoo: false,
+      isOwner: false, // 当前用户是否为楼主
+      loginUserId: null, // 当前登录用户ID
     };
   },
-  //生命周期 - 创建完成（可以访问当前this实例）
-  created() {},
-  //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {
     if (this.$route.name == "c-contentId") {
       this.showComment = true;
+    }
+    if (getToken() !== undefined) {
+      this.loginUserId = this.globalVariable.userInfoGlobal.userId;
     }
   },
   watch: {
     zanBoolean: {
       handler(newVal, oldVal) {
-        // console.log(newVal, oldVal)
         this.isZanBoo = this.zanBoolean;
         this.isZan();
       },
@@ -96,9 +105,7 @@ export default {
       immediate: true,
     },
   },
-  //方法集合
   methods: {
-    //判断是否被点赞
     isZan() {
       if (this.isZanBoo == false) {
         this.zanImg = dzNotImage;
@@ -108,38 +115,31 @@ export default {
         return true;
       }
     },
-    //点击评论
     clickComment() {
       this.showComment = !this.showComment;
     },
-    //点赞
     setZan(contentId) {
       if (getToken() === undefined) {
         this.$router.push({ path: "/userlogin", query: { id: "1" } });
       } else {
         if (this.isZanBoo == true) {
-          //取消点赞
           this.isZanBoo = false;
-
           this.contentObj.loveCount--;
         } else {
-          //设置点赞
           this.isZanBoo = true;
           this.contentObj.loveCount++;
         }
         this.isZan(contentId);
-        //发送api
         operateApi.zanContent(contentId).then((response) => {
           if (response.data == 1) {
-            //点赞
+            // 点赞成功
           }
           if (response.data == 0) {
-            //取消点赞
+            // 取消点赞成功
           }
         });
       }
     },
-    //复制分享链接
     copys(e, contentId) {
       const hostname = window.location.origin;
       const clipboard = new Clipboard(e.target, {
@@ -151,23 +151,38 @@ export default {
           title: "复制成功：",
           message: h("i", { style: "color: teal" }, "快去分享给好盆友吧!"),
         });
-        // 释放内存
         clipboard.destroy();
       });
-
       clipboard.on("error", (e) => {
-        // 不支持复制
-        Message({
+        this.$message({
           message: "该浏览器不支持自动复制",
           type: "warning",
         });
-        // 释放内存
         clipboard.destroy();
+      });
+    },
+    // 关闭问题方法
+    closeQuestion(contentObj) {
+      const data = {
+        ...contentObj,
+        is_finished: 1, // 2表示已关闭
+      };
+      console.log("关闭问题数据：", data);
+
+      operateApi.modifyContent(data).then((response) => {
+        if (response.data === 1) {
+          this.$message.success("问题已关闭！");
+          // 更新问题状态，例如用 2 表示问题已关闭
+          this.contentObj.is_finished = 1;
+        } else {
+          this.$message.error("关闭问题失败！");
+        }
       });
     },
   },
 };
 </script>
+
 <style>
 .content-bootom-svg {
   font-size: 10px;
@@ -186,5 +201,10 @@ export default {
 }
 .content-bottom-hover:hover {
   color: coral;
+}
+.disabled {
+  pointer-events: none; /* 禁止点击 */
+  opacity: 0.6; /* 调低透明度 */
+  cursor: not-allowed; /* 鼠标样式为不可点击 */
 }
 </style>
