@@ -232,6 +232,7 @@ import { getToken, setToken, removeToken } from "@/utils/auth";
 //组件
 import CommentUser from "@/components/CommentUser";
 import CommentChild from "@/components/CommentChild";
+import Vue from "vue";
 
 export default {
   name: "Comment",
