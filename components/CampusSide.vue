@@ -138,10 +138,9 @@ export default {
   },
 
   mounted() {
-    if (getToken() !== undefined) {
-      // this.loginUserId = this.$globalVariable.userInfoGlobal.userId;
+    if(getToken()) {
+      this.loginUserId = sessionStorage.getItem("userId");  // 获取登录用户ID
     }
-    console.log(this.$globalVariable);
   },
 
   watch: {

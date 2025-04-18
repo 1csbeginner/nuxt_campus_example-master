@@ -240,6 +240,7 @@ export default {
             this.userName = response.user.userName;
             this.nickName = response.user.nickName;
             this.uImages = response.user.avatar;
+            sessionStorage.setItem("userId", response.user.userId);
             // 设置全局用户信息
             this.$globalVariable.userInfoGlobal = response.user;
           })
