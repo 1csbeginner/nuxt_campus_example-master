@@ -57,4 +57,11 @@ export default {
             data: contentSet
         })
     },
+    getUserTags(data){
+      return request({
+          url: `campus/userlike/list/1/999999`,
+          method: 'put',
+          data: data
+      })
+    }
 }

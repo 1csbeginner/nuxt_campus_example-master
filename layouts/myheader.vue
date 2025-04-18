@@ -241,7 +241,7 @@ export default {
             this.nickName = response.user.nickName;
             this.uImages = response.user.avatar;
             // 设置全局用户信息
-            this.globalVariable.userInfoGlobal = response.user;
+            this.$globalVariable.userInfoGlobal = response.user;
           })
           .catch((response) => {
             removeToken();

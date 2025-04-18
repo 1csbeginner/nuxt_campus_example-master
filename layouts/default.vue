@@ -13,20 +13,14 @@
           <nuxt />
         </div>
       </el-main>
-      <!-- 底栏容器 -->
-      <!-- <el-footer>
-        <myfooter />
-      </el-footer> -->
     </el-container>
   </div>
 </template>
 <script>
 import myheader from "./myheader";
-import myfooter from "./myfooter";
 export default {
   components: {
     myheader,
-    myfooter,
   },
 };
 </script>

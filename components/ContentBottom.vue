@@ -79,7 +79,7 @@ export default {
       this.showComment = true;
     }
     if (getToken() !== undefined) {
-      this.loginUserId = this.globalVariable.userInfoGlobal.userId;
+      this.loginUserId = this.$globalVariable.userInfoGlobal.userId;
     }
   },
   watch: {

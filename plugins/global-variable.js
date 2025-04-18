@@ -1,18 +1,11 @@
 import Vue from 'vue'
-//定义全局常量
-var userGlobalConst = {
-    userId: "",
-    avatar: "",
-    email: "",
-    nickName: "",
-    userName: ""
+
+// 一个响应式对象，所有组件都引用同一个实例
+const globalVariable = Vue.observable({
+  userInfoGlobal: null
+})
+
+// Nuxt 插件：inject 会自动挂到 this.$globalVariable、context.$globalVariable
+export default ({}, inject) => {
+  inject('globalVariable', globalVariable)
 }
-
-export {
-    userGlobalConst
-}
-
-import globalVariable from '@/plugins/globalVariable.vue'
-Vue.prototype.globalVariable = globalVariable;
-
-Vue.prototype.userGlobalConst = userGlobalConst
