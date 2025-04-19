@@ -63,5 +63,19 @@ export default {
           method: 'put',
           data: data
       })
+    },
+    addUserTags(data){
+      return request({
+          url: `campus/userlike/add`,
+          method: 'post',
+          data: data
+      })
+    },
+    getRecommend(data){
+      return request({
+          url: `admin/content/find`,
+          method: 'post',
+          data: data
+      })
     }
 }

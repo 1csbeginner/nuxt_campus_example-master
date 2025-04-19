@@ -23,6 +23,9 @@
       <el-button type="text" icon="el-icon-document" @click="goToOrders">
         订单
       </el-button>
+      <el-button type="text" icon="el-icon-document" @click="goToMyReview">
+        我的评价
+      </el-button>
     </div>
   </div>
 </template>
@@ -53,6 +56,9 @@ export default {
     },
     goToMyProduct() {
       this.$router.push("/myProduct");
+    },
+    goToMyReview() {
+      this.$router.push("/myReview");
     },
     goBack(){
       if (this.$route.name === 'shop') {
