@@ -42,6 +42,9 @@
       <p><strong>我的评价：</strong>{{ order.bcomment }}</p>
       <el-button type="text" size="small" @click="editReview">修改评价</el-button>
     </div>
+    <div v-if="order.pcomment && !isReviewing" class="review-section">
+      <p><strong>卖家评价：</strong>{{ order.pcomment }}</p>
+    </div>
 
     <!-- 正在编辑或首次评价 -->
     <div v-if="isReviewing" class="review-section">

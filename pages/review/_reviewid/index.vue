@@ -2,7 +2,9 @@
   <div class="order-container">
     <ShopNaviBar />
 
-    <!-- 使用 OrderItem 组件 -->
+    <h2>
+      卖家id: {{ userId  }}
+    </h2>
     <ReviewItem
       v-for="(order, index) in orderList"
       :key="index"
@@ -46,20 +48,15 @@ export default {
     };
   },
   created() {
-    shopApi.getUserId().then(userId => {
-      if (userId) {
-        this.userId = userId
-        this.getOrderList(this.orderFilter)
-      }
-    })
+    this.userId = this.$route.params.reviewid;
+    this.getOrderList(this.orderFilter);
   },
   mounted() {
-    this.userId = sessionStorage.getItem("userId");
     this.mainMinHeight = document.documentElement.clientHeight - 45;
   },
   methods: {
     getOrderList(filter) {
-      shopApi.getList("shoppingorder", filter, { producer: this.userId}).then((response) => {
+      shopApi.getList("shoppingorder", filter, { producer: this.userId, isFinished: 1}).then((response) => {
         console.log(filter)
         this.orderList = response.rows.map((item) => ({
           id: item.id,
@@ -69,6 +66,7 @@ export default {
           product: item.product,
           bcomment: item.bcomment,
           pcomment: item.pcomment,
+          producer: item.producer,
         }));
         this.total = parseInt(response.total);
       });
@@ -159,5 +157,3 @@ export default {
   margin-top: 20px;
 }
 </style>
-
-

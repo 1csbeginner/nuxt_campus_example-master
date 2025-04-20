@@ -115,6 +115,7 @@ export default {
           quantity: item.quantity,
           stock: item.stock,
           image: item.image,
+          producer: item.producer
         }));
 
       // 检查是否有商品库存为0
@@ -147,6 +148,7 @@ export default {
             price: item.product.price,
             stock: item.product.stock,
             quantity: item.quantity,
+            producer: item.product.createUser,
             selected: false,
           }));
         })

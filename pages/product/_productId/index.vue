@@ -15,6 +15,12 @@
         <!-- 库存信息 -->
         <p v-if="product.stock > 0" class="product-stock">库存: {{ product.stock }} 件</p>
         <p v-else class="out-of-stock">此商品暂时缺货</p>
+        <el-button
+          type="text"
+          @click="goToReview"
+        >
+          查看卖家所有评论
+        </el-button>
 
         <!-- 数量选择 -->
         <div class="quantity-selector" v-if="product.stock > 0">
@@ -42,23 +48,12 @@
         </div>
       </div>
     </div>
-    <ProductCommentCard
-      v-for="(comment, index) in product.comments"
-      :key="index"
-      :comment="comment"
-      :getImg="getImg"
-      :productId="productId"
-      :userId="userId"
-      :isReviewing="isReviewing"
-      :isSubmitting="isSubmitting"
-    />
   </div>
 </template>
 
 <script>
 import shopApi from "@/api/shop";
 import ShopNaviBar from "@/components/ShopNaviBar";
-import ProductCommentCard from "@/components/ProductCommentCard.vue";
 
 export default {
   data() {
@@ -70,7 +65,6 @@ export default {
   },
   components: {
     ShopNaviBar,
-    ProductCommentCard
   },
   created() {
     this.loadCartCount();
@@ -138,6 +132,7 @@ export default {
           price: this.product.price,
           quantity: this.quantity,
           stock: this.product.stock,
+          producer: this.product.createUser
         },
       ];
       // 存储订单信息到 sessionStorage
@@ -164,7 +159,15 @@ export default {
         console.error("加入购物车失败", error);
         this.$message.error("加入购物车失败，请稍后重试");
       }
-    }
+    },
+    goToReview() {
+      if (!this.product.createUser) {
+        this.$message.error("无法获取商家信息");
+        return;
+      }
+      // 跳转到商家评论页面，传入 createUser 作为参数
+      this.$router.push({ path: `/review/${this.product.createUser}` });
+    },
   },
 };
 </script>

@@ -23,19 +23,28 @@
       <el-button type="text" icon="el-icon-document" @click="goToOrders">
         订单
       </el-button>
-      <el-button type="text" icon="el-icon-document" @click="goToMyReview">
-        我的评价
+      <el-button type="text" @click="goToMyReview">
+        卖家评价
       </el-button>
     </div>
   </div>
 </template>
 
 <script>
+import shopApi from "@/api/shop"; // 确保调用正确的购物车API
 export default {
   data() {
     return {
       searchQuery: "",
+      userId: 0,
     };
+  },
+  created() {
+    shopApi.getUserId().then(userId => {
+      if (userId) {
+        this.userId = userId
+      }
+    })
   },
   methods: {
     searchProduct() {
@@ -58,7 +67,7 @@ export default {
       this.$router.push("/myProduct");
     },
     goToMyReview() {
-      this.$router.push("/myReview");
+      this.$router.push({ path: `/review/${this.userId}` });
     },
     goBack(){
       if (this.$route.name === 'shop') {

@@ -90,14 +90,24 @@ export default {
         })
     },
     submitReview(orderId, review){
-        return request({
-            url: `campus/shoppingorder/comment`,
-            method: 'put',
-            data:{
-                id: orderId,
-                bcomment: review
-            }
-        })
+      return request({
+          url: `campus/shoppingorder/comment`,
+          method: 'put',
+          data:{
+              id: orderId,
+              bcomment: review
+          }
+      })
+    },
+    submitPReview(orderId, review){
+      return request({
+          url: `campus/shoppingorder/comment`,
+          method: 'put',
+          data:{
+              id: orderId,
+              pcomment: review
+          }
+      })
     },
 
     async getUserId() {

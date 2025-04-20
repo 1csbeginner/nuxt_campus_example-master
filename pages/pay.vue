@@ -117,6 +117,7 @@ export default {
           productId: order.id,
           quantity: order.quantity,
           price: (order.price * order.quantity).toFixed(2),
+          producer: order.producer,
         });
 
         if (response.code !== 200) {

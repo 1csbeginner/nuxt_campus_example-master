@@ -71,15 +71,11 @@ export default {
       showComment: false,
       isZanBoo: false,
       isOwner: false, // 当前用户是否为楼主
-      loginUserId: null, // 当前登录用户ID
     };
   },
   mounted() {
     if (this.$route.name == "c-contentId") {
       this.showComment = true;
-    }
-    if (getToken() !== undefined) {
-      this.loginUserId = this.$globalVariable.userInfoGlobal.userId;
     }
   },
   watch: {

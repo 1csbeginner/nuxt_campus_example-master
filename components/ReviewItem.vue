@@ -15,7 +15,7 @@
 
         <!-- 如果订单已完成，未评价 -->
         <el-button
-          v-if="order.isFinished === 1 && !order.pcomment && !isReviewing"
+          v-if="!order.pcomment && order.bcomment && !isReviewing && order.producer === userId"
           type="success"
           size="small"
           @click="startReview"
@@ -28,6 +28,10 @@
     <!-- 已评价：展示评论内容 + 修改按钮 -->
     <div v-if="order.bcomment && !isReviewing" class="review-section">
       <p><strong>买家评价：</strong>{{ order.bcomment }}</p>
+    </div>
+
+    <div v-if="order.pcomment && !isReviewing" class="review-section">
+      <p><strong>卖家评价：</strong>{{ order.pcomment }}</p>
       <el-button type="text" size="small" @click="editReview">修改评价</el-button>
     </div>
 
@@ -71,8 +75,18 @@
         isReviewing: false,
         reviewInput: "",
         isSubmitting: false,
+        userId: 0,
       };
     },
+
+    created() {
+      shopApi.getUserId().then(userId => {
+        if (userId) {
+          this.userId = userId
+        }
+      })
+    },
+
     methods: {
       getImg(img) {
         return shopApi.getProductImg(img);
@@ -85,7 +99,7 @@
         this.isReviewing = true;
       },
       editReview() {
-        this.reviewInput = this.order.bcomment;
+        this.reviewInput = this.order.pcomment;
         this.isReviewing = true;
       },
       cancelReview() {
@@ -101,7 +115,7 @@
         this.isSubmitting = true;
 
         // 发送修改后的评论内容
-        shopApi.submitOrder(this.order.id, this.orderInput)
+        shopApi.submitPReview(this.order.id, this.reviewInput)
           .then(() => {
             this.isSubmitting = false;
             this.$message.success("评价提交成功！");
