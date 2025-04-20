@@ -50,7 +50,7 @@
 </template>
 
 <script>
-import sellItem from "@/components/sellItem.vue";
+import sellItem from "@/components/SellItem.vue";
 import shopApi from "@/api/shop"; // 确保调用正确的购物车API
 import ShopNaviBar from "@/components/ShopNaviBar"; // 导入导航栏组件
 import AddProductForm from "@/components/AddProductForm.vue"; // 添加商品表单组件

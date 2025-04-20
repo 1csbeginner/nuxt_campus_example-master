@@ -44,7 +44,7 @@
 <script>
 import PayItem from "@/components/PayItem.vue";
 import AddressCard from "@/components/AddressCard.vue"; // 假设有一个地址卡片组件
-import userInfoApi from "@/api/userinfo"; // 假设有一个获取用户信息的 API
+import userInfoApi from "@/api/userInfo"; // 假设有一个获取用户信息的 API
 import shopApi from "@/api/shop";
 
 export default {
