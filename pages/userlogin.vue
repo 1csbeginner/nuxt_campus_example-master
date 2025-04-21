@@ -58,21 +58,20 @@
             </div>
           </el-form-item>
           <el-form-item>
-            <router-link
-              :to="{ path: 'resetPwd' }"
-              style="float: left"
-              class="router-link-active"
-            >
-              <el-link type="danger">忘记密码？</el-link>
-            </router-link>
+            <el-form-item>
+              <router-link
+                to="/resetPwd"
+                class="el-link el-link--danger"
+                style="float: left"
+              >忘记密码？</router-link>
 
-            <span
-              style="float: right"
-              class="router-link-active"
-              @click="openWxamp"
-            >
-              <el-link type="danger">使用微信登录</el-link>
-            </span>
+              <router-link
+                to="#"
+                class="el-link el-link--danger"
+                style="float: right"
+                @click.native.prevent="openWxamp"
+              >使用微信登录</router-link>
+            </el-form-item>
           </el-form-item>
 
           <el-form-item style="width: 100%">
@@ -156,7 +155,7 @@ export default {
     },
     //打开微信小程序二维码登录
     openWxamp() {
-      
+
       var flag = window.open("/wxamp", "Campus", "width=400,height=700,left=30,top=10");
       var loop = setInterval(function () {
         if (flag.closed) {

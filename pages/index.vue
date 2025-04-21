@@ -33,7 +33,7 @@
           </div>
         </div>
         <!-- 侧边栏内容 -->
-        <CampusSide class="hidden-xs-only":categoryObj="categoryObj"></CampusSide>
+          <CampusSide class="hidden-xs-only":categoryObj="categoryObj"></CampusSide>
       </div>
     </div>
   </div>

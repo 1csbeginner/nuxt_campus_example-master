@@ -28,15 +28,13 @@
         </div>
       </div>
 
-      <!-- 推荐榜和标签编辑区域（仅登录时显示） -->
-      <div v-if="loginUserId" v-loading="isInitializing" element-loading-text="加载中...">
-        <!-- 推荐榜 -->
+      <!-- 推荐榜 -->
         <div class="wbpro-side-tit woo-box-flex woo-box-alignCenter" style="margin-top: 20px;">
           <div class="campus-side-title woo-box-item-flex">可能感兴趣的求助</div>
         </div>
         <div class="woo-divider-main woo-divider-x"></div>
-
-
+      <!-- 推荐榜和标签编辑区域（仅登录时显示） -->
+      <div v-show="loginUserId">
 
         <!-- 推荐内容 -->
         <div class="campus-side-card">
@@ -66,12 +64,12 @@
           <div class="woo-box-flex woo-box-alignCenter" style="justify-content: space-between;">
             <label>我的兴趣标签：</label>
             <el-button
-              v-if="!isEditingTags"
+              v-show="!isEditingTags"
               type="text"
               size="mini"
               @click="isEditingTags = true"
             >编辑</el-button>
-            <div v-else>
+            <div v-show="isEditingTags" style="display: flex; gap: 8px;">
               <el-button size="mini" @click="saveTags">保存</el-button>
               <el-button size="mini" @click="cancelEdit">取消</el-button>
             </div>
@@ -140,17 +138,13 @@ export default {
     // 加载热度榜（无需登录）
     this.getSimpleHotContent();
 
+  },
+
+  mounted(){
     // 初始化 loginUserId，兼容 SSR
     this.initializeUserId();
-
     // 启动 sessionStorage 轮询
     this.startSessionStoragePolling();
-  },
-  beforeDestroy() {
-    // 清理轮询定时器，避免内存泄漏
-    if (this.sessionStoragePollInterval) {
-      clearInterval(this.sessionStoragePollInterval);
-    }
   },
   watch: {
     loginUserId(newId) {
@@ -179,19 +173,6 @@ export default {
       if (typeof window !== "undefined" && getToken()) {
         this.loginUserId = sessionStorage.getItem("userId") || null;
         console.log("loginUserId 初始化 (sessionStorage):", this.loginUserId);
-      } else {
-        // 后端接口备选方案（需根据实际 API 调整）
-        try {
-          const response = await touristApi.getUserInfo(); // 假设的接口
-          this.loginUserId = response.data.userId || null;
-          if (this.loginUserId && typeof window !== "undefined") {
-            sessionStorage.setItem("userId", this.loginUserId); // 存入 sessionStorage
-          }
-          console.log("从后端获取 loginUserId:", this.loginUserId);
-        } catch (err) {
-          console.error("获取用户信息失败", err);
-          this.loginUserId = null;
-        }
       }
     },
     startSessionStoragePolling() {
@@ -289,7 +270,7 @@ export default {
         const tagIds = this.selectedTags.map((tag) => tag.categoryId);
         console.log("获取推荐列表，使用的标签ID：", tagIds);
         const response = await operateApi.getRecommend(tagIds);
-        this.recommendedList = response.data || [];
+        this.recommendedList = response.data;
         console.log("推荐列表加载完成", this.recommendedList);
       } catch (err) {
         console.error("获取推荐列表失败", err);
