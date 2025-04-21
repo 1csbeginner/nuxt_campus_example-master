@@ -34,7 +34,7 @@
         </div>
         <div class="woo-divider-main woo-divider-x"></div>
       <!-- 推荐榜和标签编辑区域（仅登录时显示） -->
-      <div v-show="loginUserId">
+      <div v-if="loginUserId">
 
         <!-- 推荐内容 -->
         <div class="campus-side-card">
@@ -64,12 +64,12 @@
           <div class="woo-box-flex woo-box-alignCenter" style="justify-content: space-between;">
             <label>我的兴趣标签：</label>
             <el-button
-              v-show="!isEditingTags"
+              v-if="!isEditingTags"
               type="text"
               size="mini"
               @click="isEditingTags = true"
             >编辑</el-button>
-            <div v-show="isEditingTags" style="display: flex; gap: 8px;">
+            <div v-else>
               <el-button size="mini" @click="saveTags">保存</el-button>
               <el-button size="mini" @click="cancelEdit">取消</el-button>
             </div>
