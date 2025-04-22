@@ -52,6 +52,8 @@ module.exports = {
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
   ],
+  buildDir: 'dist',
+  target: 'server',
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
