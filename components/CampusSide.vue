@@ -235,7 +235,7 @@ export default {
         .getSimpleHotContent()
         .then((response) => {
           this.simpleHotList = response.data || [];
-          console.log("热度榜加载完成", this.simpleHotList);
+          //console.log("热度榜加载完成", this.simpleHotList);
         })
         .catch((err) => {
           console.error("获取热度榜失败", err);

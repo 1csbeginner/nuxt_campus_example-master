@@ -14,7 +14,7 @@
         <div class="content-t" v-loading="loading">
           <Content
             v-for="(item, key) in contentObj"
-            :key="key"
+            :key="item.contentId"
             :contentObj="item"
             :loveContentIds="loveContentIds"
           ></Content>

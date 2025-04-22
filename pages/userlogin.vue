@@ -63,7 +63,7 @@
               style="float: left"
               class="router-link-active"
             >
-              <el-link type="danger">忘记密码？</el-link>
+              忘记密码
             </router-link>
 
             <span
