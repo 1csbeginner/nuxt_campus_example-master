@@ -5,7 +5,7 @@ module.exports = {
     },
     prod: {
         DESCN:'线上环境',
-	    API_BASE_URL:'http://localhost:8160',
+	    API_BASE_URL:'http://8.153.192.221:8160',
     }
 }
 
