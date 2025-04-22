@@ -198,7 +198,7 @@ export default {
       this.isInitializing = true;
       try {
         await this.fetchUserTags();
-        if (this.categoryObj.length > 0) {
+        if (this.categoryObj.length && this.categoryObj.length > 0) {
           this.filterCategoryData();
           await this.getRecommendedList();
         } else {
