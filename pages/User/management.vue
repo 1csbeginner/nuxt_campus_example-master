@@ -130,13 +130,12 @@
         </el-table>
         <!-- 分页 -->
         <el-pagination
-          :current-page="current"
+          :current-page="currentPage"
           :page-size="limit"
           :total="total"
-          :page-sizes="[5, 10, 20, 50]"
+          layout="prev, pager, next"
           style="padding: 30px 0; text-align: center"
-          layout="sizes, prev, pager, next, jumper, ->, total, slot"
-          @current-change="getList"
+          @current-change="handleCurrentChange"
         />
       </el-col>
       <el-col :xs="0" :sm="2"><div class="grid-content"></div></el-col>
@@ -176,9 +175,8 @@ export default {
   data() {
     return {
       dialogVisible: false,
-      current: 1, //当前页
+      currentPage: 1, //当前页
       limit: 10, //每页显示记录数
-      searchObj: {}, //条件封装对象
       contentList: [], //每页数据集合
       total: 0, //总记录数
       multipleSelection: [], // 批量选择中选择的记录列表
@@ -209,7 +207,7 @@ export default {
     } else {
       //在页面渲染之前执行
       //一般调用methods定义的方法，得到数据
-      this.getList();
+      this.getList(this.currentPage);
     }
   },
   mounted() {
@@ -269,7 +267,7 @@ export default {
           ),
         });
         //刷新页面
-        this.getList();
+        this.getList(this.currentPage);
         //关闭弹出层
         this.dialogVisible = false;
       });
@@ -286,19 +284,22 @@ export default {
     },
 
     //用户设置列表
-    getList(page = 1) {
+    getList(page) {
       //添加当前页参数
-      this.current = page;
+      this.currentPage = page;
+      const params = {
+        pageNum: this.currentPage,
+        pageSize: this.limit
+      }
       operateApi
-        .ownContents(this.searchObj)
+        .ownContents(params)
         .then((response) => {
           //请求成功response是接口返回数据
           //返回集合赋值list
-          console.log(response)
           this.contentList = response.rows;
-          console.log(contentList)
           //总记录数
           this.total = parseInt(response.total);
+          console.lig(this.contentList)
           // console.log(this.list);
         })
         .catch((error) => {
@@ -306,6 +307,10 @@ export default {
           //console.log("失败" + error);
         });
     },
+    handleCurrentChange(page){
+      this.currentPage = page
+      this.getList(this.currentPage);
+    }
   },
 };
 </script>
