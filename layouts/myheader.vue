@@ -170,6 +170,35 @@
                       ></path>
                     </svg> </el-dropdown-item
                 ></span>
+                <span @click="goToNotifications()">
+                  <el-dropdown-item
+                    command="/user/notifications"
+                    style="font-weight: bolder"
+                  >
+                    通知
+                    <svg
+                      t="1638265991107"
+                      class="icon"
+                      viewBox="0 0 1024 1024"
+                      version="1.1"
+                      xmlns="http://www.w3.org/2000/svg"
+                      p-id="6358"
+                      width="20"
+                      height="20"
+                    >
+                      <path
+                        d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64z m0 832c-211.8 0-384-172.2-384-384S300.2 128 512 128s384 172.2 384 384-172.2 384-384 384z"
+                        fill="#515151"
+                        p-id="6359"
+                      ></path>
+                      <path
+                        d="M512 288c-17.7 0-32 14.3-32 32v160c0 17.7 14.3 32 32 32s32-14.3 32-32V320c0-17.7-14.3-32-32-32z m0 384c-17.7 0-32 14.3-32 32s14.3 32 32 32 32-14.3 32-32-14.3-32-32-32z"
+                        fill="#FF4D4F"
+                        p-id="6360"
+                      ></path>
+                    </svg>
+                  </el-dropdown-item>
+                </span>
                 <span @click="exit()">
                   <el-dropdown-item
                     command="/logout"
@@ -248,6 +277,9 @@ export default {
             removeToken();
           });
       }
+    },
+    goToNotifications() {
+      this.$router.push("/user/notifications");
     },
     // 退出登录
     exit() {
