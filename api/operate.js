@@ -77,5 +77,12 @@ export default {
           method: 'post',
           data: data
       })
+    },
+    getInboxComments(data){
+      return request({
+          url: `campus/getUserComment`,
+          method: 'get',
+          data: data
+      })
     }
 }
