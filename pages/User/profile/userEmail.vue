@@ -95,10 +95,13 @@ export default {
             message: "请输入正确的邮箱地址",
             trigger: ["blur", "change"],
           },
+          {
+            pattern: /@(st\.)?usst\.edu\.cn$/,
+            message: "请使用上海理工大学邮箱（教师@usst.edu.cn或学生@st.usst.edu.cn）",
+            trigger: ["blur", "change"],
+          },
           { required: true, validator: checkEmail, trigger: "blur" },
         ],
-        password: [{ required: true, message: "密码不能为", trigger: "blur" }],
-        code: [{ required: true, message: "验证码不能为空", trigger: "blur" }],
       },
       emailForm: {
         password: "",

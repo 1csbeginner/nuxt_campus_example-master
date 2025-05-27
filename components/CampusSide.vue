@@ -198,11 +198,11 @@ export default {
       this.isInitializing = true;
       try {
         await this.fetchUserTags();
-        if (this.categoryObj.length && this.categoryObj.length > 0) {
+        if (Array.isArray(this.categoryObj) && this.categoryObj.length > 0) {
           this.filterCategoryData();
           await this.getRecommendedList();
         } else {
-          console.log("categoryObj 为空，跳过推荐列表加载");
+          console.log("categoryObj 为空或不是数组，跳过推荐列表加载");
         }
       } catch (err) {
         console.error("初始数据加载失败", err);

@@ -149,6 +149,12 @@ export default {
             message: "请输入正确的邮箱地址",
             trigger: ["blur", "change"],
           },
+          {
+            pattern: /@(st\.)?usst\.edu\.cn$/,
+            message: "请使用上海理工大学邮箱（教师@usst.edu.cn或学生@st.usst.edu.cn）",
+            trigger: ["blur", "change"],
+          },
+          { required: true, validator: checkEmail, trigger: "blur" },
         ],
         code: [{ required: true, trigger: "change", message: "请输入验证码" }],
       },
