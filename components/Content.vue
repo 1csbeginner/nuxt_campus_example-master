@@ -120,7 +120,7 @@ export default {
   /* box-shadow: 0 10px 12px 0 rgba(0, 0, 0, 0.2); */
   margin: 0 0 0 0;
   padding: 20px 20px 0;
-  background-color: #fff;
+  background-color: rgba(255, 255, 255, 0.7);
   /* box-shadow: 0px 0px 25px rgb(0 0 0 / 10%); */
   border: 1px solid rgba(255, 255, 255, 0.5);
   /* border-right: 1px solid rgba(255, 255, 255, 0.2); */

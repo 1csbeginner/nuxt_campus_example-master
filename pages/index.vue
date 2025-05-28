@@ -154,4 +154,21 @@ export default {
 .content-t {
   margin: 20px 0 0 0;
 }
+/* 添加半透明样式 */
+.hidden-xs-only {
+  background-color: rgba(255, 255, 255, 0.7) !important; /* 80% 透明度的白色背景 */
+  backdrop-filter: blur(10px); /* 添加背景模糊效果 */
+  -webkit-backdrop-filter: blur(10px); /* Safari 兼容 */
+  transition: background-color 0.3s ease; /* 添加过渡效果 */
+}
+
+/* 鼠标悬停时降低透明度 */
+.hidden-xs-only:hover {
+  background-color: rgba(255, 255, 255, 0.9) !important;
+}
+
+/* 确保其他样式保持不变 */
+.campus-main {
+  flex: 1;
+}
 </style>
