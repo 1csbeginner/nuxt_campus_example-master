@@ -2,8 +2,18 @@
   <div class="publish-content">
     <el-row>
       <el-col :span="8" :xs="20">
-        <el-dialog title="快捷发布" :visible.sync="dialog" width="600px;">
+        <el-dialog title="说点什么吧" :visible.sync="dialog" width="600px;" @close="redirectToHome">
           <div>
+            <div class="woo-box-item-inlineBlock">
+                <el-cascader
+                  size="small"
+                  placeholder="请选择分类"
+                  v-model="cascader"
+                  :options="categoryOptions"
+                  :props="props"
+                  class="c-cascader"
+                ></el-cascader>
+            </div>
             <el-input
               type="textarea"
               :autosize="{ minRows: 2, maxRows: 10 }"
@@ -22,16 +32,7 @@
             <div class="woo-box-flex woo-box-alignCenter">
               <div class="woo-box-item-flex" style="align-self: center">
                 <!-- 分类 -->
-                <div class="woo-box-item-inlineBlock">
-                  <el-cascader
-                    size="small"
-                    placeholder="请选择分类"
-                    v-model="cascader"
-                    :options="categoryOptions"
-                    :props="props"
-                    class="c-cascader"
-                  ></el-cascader>
-                </div>
+
 
                 <div class="woo-box-item-inlineBlock">
                   <el-button
@@ -62,16 +63,30 @@
                   </el-button>
                 </div>
               </div>
+
+              <!-- 取消按钮 -->
+              <el-button
+                type="default"
+                round
+                @click="redirectToHome"
+                style="margin-top: 15px"
+              >
+                取消
+              </el-button>
+
+              <!-- 发布按钮 -->
               <el-button
                 type="primary"
                 round
                 style="margin-top: 15px"
                 :disabled="contentParam.content.length <= 0"
-                @click="publishContent()"
+                @click="publishContent"
               >
                 发布
               </el-button>
             </div>
+
+            <!-- 上传组件 -->
             <el-upload
               style="height: 15x"
               :headers="upload.headers"
@@ -118,7 +133,7 @@ export default {
         categoryId: "",
         type: 0,
         isAnonymous: 0,  // 匿名发布字段
-        needHelp: 0,// 求助字段
+        needHelp: 0, // 求助字段
         content: "",
         fileList: [],
       },
@@ -268,6 +283,10 @@ export default {
         this.disabled.video = false;
       }
     },
+    redirectToHome() {
+      // 退出表单时跳转到首页
+      this.$router.push({ path: '/' });
+    },
     publishContent() {
       this.contentParam.fileList = [];
       console.log(this.fileList);
@@ -312,10 +331,32 @@ export default {
 }
 .c-cascader {
   border-radius: 0;
+  margin-bottom: 15px;
 }
 .help-tag {
   color: red;
   font-weight: bold;
   font-size: 14px;
+}
+
+/* 放大所有文字 */
+.publish-content {
+  font-size: 18px; /* 设置全局字体大小 */
+}
+
+.el-button {
+  font-size: 16px; /* 按钮文字大小 */
+}
+
+.el-input {
+  font-size: 16px; /* 输入框文字大小 */
+}
+
+.el-checkbox {
+  font-size: 16px; /* 复选框文字大小 */
+}
+
+.el-upload {
+  font-size: 16px; /* 上传组件文字大小 */
 }
 </style>

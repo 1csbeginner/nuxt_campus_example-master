@@ -28,6 +28,10 @@ export default {
 .el-container {
   min-height: 100vh;
   background-color: #f5f5f5;
+  background-image: url('~assets/images/bg.jpg'); /* 替换为你的图片路径 */
+  background-size: cover; /* 背景图片覆盖整个容器 */
+  background-position: center; /* 背景图片居中 */
+  background-repeat: no-repeat; /* 背景图片不重复 */
 }
 .el-main {
   overflow: visible !important;
