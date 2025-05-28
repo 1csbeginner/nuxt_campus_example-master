@@ -122,7 +122,7 @@ export default {
 </script>
 <style>
 .campus-menu {
-  box-shadow: 0px 0px 25px rgb(0 0 0 / 10%);
+  /* box-shadow: 0px 0px 25px rgb(0 0 0 / 10%); */
   position: sticky;
   top: 45px;
   background-color: #fff;

@@ -89,7 +89,7 @@
     </el-form>
     <!--  底部  -->
     <div class="el-register-footer">
-      <span>Copyright © 2023 oddfar.com All Rights Reserved.</span>
+      <span>上海理工大学软件协同第八小组</span>
     </div>
   </div>
 </template>
@@ -211,9 +211,10 @@ export default {
 <style>
 .register {
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
   height: 100%;
+  padding-right: 50px;
 }
 .title {
   margin: 0px auto 30px auto;
