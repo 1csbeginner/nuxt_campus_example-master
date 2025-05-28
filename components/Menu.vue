@@ -125,7 +125,6 @@ export default {
   /* box-shadow: 0px 0px 25px rgb(0 0 0 / 10%); */
   position: sticky;
   top: 45px;
-  background-color: #fff;
 }
 .nav-title {
   margin: 0;
@@ -134,7 +133,28 @@ export default {
   font-size: 22px;
   font-weight: 500;
 }
-.el-menu-vertical:not(.el-menu--collapse) {
-  width: 182px;
+
+/* 设置菜单的背景透明 */
+.el-menu-vertical {
+  background-color: transparent !important;
+}
+
+/* 设置菜单项的背景透明 */
+.el-menu-item, .el-submenu {
+  background-color: transparent !important;
+}
+
+/* 如果有子菜单的展开项，确保子菜单也透明 */
+.el-submenu.is-opened > .el-submenu__title {
+  background-color: transparent !important;
+}
+
+/* 设置子菜单项的背景透明 */
+.el-submenu__content {
+  background-color: transparent !important;
+}
+/* 设置子菜单标题的透明背景 */
+.el-submenu__title {
+  background-color: transparent !important;
 }
 </style>
