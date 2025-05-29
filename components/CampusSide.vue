@@ -315,9 +315,12 @@ export default {
 <style scoped>
 .campus-side {
   background-color: #fff;
-  margin: 20px 0 0 0;
   width: 280px;
   margin-left: 8px;
+  position: sticky;
+  top: 70px; /* 调整为顶部导航栏高度 + 20px */
+  height: calc(100vh - 70px);
+  overflow-y: auto;
 }
 .campus-side-main {
   position: sticky;

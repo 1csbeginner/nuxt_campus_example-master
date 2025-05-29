@@ -1,14 +1,13 @@
 <template>
-  <div class="index-bg woo-box-flex">
-    <!-- 菜单 -->
+  <div>
+    <!-- 顶部导航菜单 -->
     <CampusMenu
-      class="hidden-xs-only"
       v-if="categoryObj != null"
       :categoryObj="categoryObj"
       @handleCategory="selectCatrgory"
     ></CampusMenu>
 
-    <div class="campus-main">
+    <div class="index-bg">
       <div class="woo-box-flex" :style="{ 'min-height': mainMinHeight + 'px' }">
         <!-- 消息盒子 -->
         <div class="content-t" v-loading="loading">
@@ -33,7 +32,7 @@
           </div>
         </div>
         <!-- 侧边栏内容 -->
-          <CampusSide class="hidden-xs-only":categoryObj="categoryObj"></CampusSide>
+        <CampusSide class="hidden-xs-only" :categoryObj="categoryObj"></CampusSide>
       </div>
     </div>
   </div>
@@ -127,16 +126,6 @@ export default {
 </script>
 
 <style>
-.index-bg {
-  /* box-shadow: 0 25px 45px rgb(0 0 0 / 10%); */
-  /* border: 1px solid rgba(255, 255, 255, 0.5); */
-  border-right: 1px solid rgba(255, 255, 255, 0.2);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 10px;
-
-  max-width: 1122px;
-  margin: auto;
-}
 .tag-group {
   text-align: center;
 }
@@ -151,8 +140,14 @@ export default {
   margin-top: 5px;
   cursor: pointer;
 }
+.index-bg {
+  max-width: 1122px;
+  margin: 0 auto;
+  border-radius: 10px;
+}
+
 .content-t {
-  margin: 20px 0 0 0;
+  margin: 20px 0;
 }
 /* 添加半透明样式 */
 .hidden-xs-only {
