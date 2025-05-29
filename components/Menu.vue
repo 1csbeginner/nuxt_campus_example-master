@@ -38,6 +38,12 @@
 
       <div
         class="nav-item"
+        @click="goToShop"
+      >
+        <span>购物</span>
+      </div>
+      <div
+        class="nav-item"
         @click="goToHotList"
       >
         <span>热度榜&推荐榜</span>
