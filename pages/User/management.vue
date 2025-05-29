@@ -46,88 +46,27 @@
       ></el-col>
     </el-row>
 
+    <!-- 内容展示部分 -->
     <el-row>
       <el-col :xs="0" :sm="2"><div class="grid-content"></div></el-col>
       <el-col :xs="24" :sm="20" style="margin: 0 auto">
-        <!-- 表单查询 -->
-
-        <!-- 复选框 -->
-        <el-table
-          :data="contentList"
-          stripe
-          style="width: 100%"
-          @selection-change="handleSelectionChange"
-        />
-        <!-- banner列表 -->
-        <el-table
-          :data="contentList"
-          border
-          style="width: 100%; margin-top: 10px"
-          @selection-change="handleSelectionChange"
-        >
-          <!-- 复选框 -->
-          <!-- <el-table-column type="selection" width="55" /> -->
-
-          <el-table-column type="index" width="50" label="序号" />
-          <!-- <el-table-column prop="cid" label="cid" /> -->
-
-          <el-table-column
-            prop="params.categoryName"
-            width="100"
-            label="分类名"
-          />
-
-          <el-table-column prop="content" width="500" label="内容">
-            <template slot-scope="scope">
-              <span>
-                {{ scope.row.content }}
-                <span v-if="scope.row.needHelp === 1" style="color: red; font-weight: bold;">[求助]</span>
-              </span>
-            </template>
-          </el-table-column>
-
-          <el-table-column label="状态" width="80">
-            <template slot-scope="scope">
-              {{ handleStatus(scope.row.status) }}</template
-            >
-          </el-table-column>
-
-          <el-table-column label="方式" width="100%">
-            <template slot-scope="scope">{{
-              scope.row.type === 0
-                ? "文字"
-                : scope.row.type === 1
-                ? "图片"
-                : "视频"
-            }}</template>
-          </el-table-column>
-
-          <el-table-column label="类型" width="100%">
-            <template slot-scope="scope">{{
-              scope.row.isAnonymous === 0 ? "不匿名" : "匿名"
-            }}</template>
-          </el-table-column>
-
-          <el-table-column prop="createTime" width="170px" label="发布时间" />
-
-          <el-table-column
-            fixed="right"
-            label="操作"
-            width="115"
-            align="center"
+        <!-- 卡片网格 -->
+        <el-row :gutter="20" class="content-grid">
+          <el-col
+            v-for="item in contentList"
+            :key="item.contentId"
+            :xs="24"
+            :sm="12"
+            class="content-col"
           >
-            <template slot-scope="scope">
-              <el-button
-                style="color: red"
-                type="text"
-                size="small"
-                icon="el-icon-delete"
-                @click="dialogOpen(scope.row.contentId)"
-                >删除</el-button
-              >
-            </template>
-          </el-table-column>
-        </el-table>
+            <content-card
+              :content="item"
+              @view="lookByCid"
+              @delete="dialogOpen"
+            />
+          </el-col>
+        </el-row>
+
         <!-- 分页 -->
         <el-pagination
           :current-page="currentPage"
@@ -141,8 +80,7 @@
       <el-col :xs="0" :sm="2"><div class="grid-content"></div></el-col>
     </el-row>
 
-    <!-- 弹出层 删除-->
-
+    <!-- 删除确认对话框 -->
     <el-dialog
       style="font-weight: bolder"
       title="提示"
@@ -156,57 +94,55 @@
       </p>
       <span slot="footer" class="dialog-footer">
         <el-button size="small" @click="dialogVisible = false">取 消</el-button>
-        <el-button size="small" type="primary" @click="deleteByCid()"
-          >确 定</el-button
-        >
+        <el-button size="small" type="primary" @click="deleteByCid()">确 定</el-button>
       </span>
     </el-dialog>
   </div>
 </template>
 
-
 <script>
-//引入接口定义的js文件
 import operateApi from "@/api/operate";
 import touristApi from "@/api/tourist";
 import { getToken } from "@/utils/auth";
+import ContentCard from "@/components/ContentCard.vue";
+
 export default {
-  //定义变量和初始值
+  components: {
+    ContentCard,
+  },
   data() {
     return {
       dialogVisible: false,
-      currentPage: 1, //当前页
-      limit: 10, //每页显示记录数
-      contentList: [], //每页数据集合
-      total: 0, //总记录数
-      multipleSelection: [], // 批量选择中选择的记录列表
+      currentPage: 1,
+      limit: 10,
+      contentList: [],
+      total: 0,
+      multipleSelection: [],
       cid: {},
       selectAid: "",
       messagessd: "",
       form: {
-        categoryId: null, // 确保初始化
+        categoryId: null,
         content: "",
         status: null,
         type: null,
         isAnonymous: null,
-        needHelp: null
+        needHelp: null,
       },
-      categoryOptions: [], // 确保选项数组存在
+      categoryOptions: [],
       dict: {
         type: {
           campus_content_status: [],
           campus_content_type: [],
-          campus_anonymous: []
-        }
-      }
+          campus_anonymous: [],
+        },
+      },
     };
   },
   created() {
     if (getToken() === undefined) {
       this.$router.push({ path: "/userlogin", query: { id: "1" } });
     } else {
-      //在页面渲染之前执行
-      //一般调用methods定义的方法，得到数据
       this.getList(this.currentPage);
     }
   },
@@ -215,9 +151,7 @@ export default {
     if (this.messagessd == "1") {
       this.open1();
     }
-    //定义方法，进行请求接口调用
   },
-
   methods: {
     handleStatus(status) {
       switch (status) {
@@ -236,7 +170,6 @@ export default {
     lookByCid(value) {
       this.$router.push({ path: "/c/" + value });
     },
-    //消息提示
     open1() {
       const h = this.$createElement;
       this.$notify({
@@ -248,16 +181,8 @@ export default {
         ),
       });
     },
-    //删除方法
     deleteByCid() {
-      //确定执行then方法
-      //调用接口
       operateApi.deleteContent(this.selectAid).then((response) => {
-        //提示
-        // this.$message({
-        //   type: "success",
-        //   message: "删除成功!",
-        // });
         this.$notify({
           title: "提示：",
           message: this.$createElement(
@@ -266,54 +191,39 @@ export default {
             "删除成功!"
           ),
         });
-        //刷新页面
         this.getList(this.currentPage);
-        //关闭弹出层
         this.dialogVisible = false;
       });
     },
-    //弹出层
     dialogOpen(id) {
       this.dialogVisible = true;
       this.selectAid = id;
     },
-    //获取选择复选框的id值
     handleSelectionChange(selection) {
       this.multipleSelection = selection;
-      // console.log(selection);
     },
-
-    //用户设置列表
     getList(page) {
-      //添加当前页参数
       this.currentPage = page;
       const params = {
         pageNum: this.currentPage,
-        pageSize: this.limit
-      }
+        pageSize: this.limit,
+      };
       operateApi
         .ownContents(params)
         .then((response) => {
-          //请求成功response是接口返回数据
-          //返回集合赋值list
           this.contentList = response.rows;
-          //总记录数
           this.total = parseInt(response.total);
-          console.lig(this.contentList)
-          // console.log(this.list);
         })
-        .catch((error) => {
-          //请求失败
-          //console.log("失败" + error);
-        });
+        .catch((error) => {});
     },
-    handleCurrentChange(page){
-      this.currentPage = page
+    handleCurrentChange(page) {
+      this.currentPage = page;
       this.getList(this.currentPage);
-    }
+    },
   },
 };
 </script>
+
 <style>
 .text2 {
   text-align: center;
@@ -333,5 +243,14 @@ export default {
 .grid-content {
   border-radius: 4px;
   min-height: 36px;
+}
+
+/* 卡片网格样式 */
+.content-grid {
+  margin-top: 20px;
+}
+
+.content-col {
+  margin-bottom: 20px;
 }
 </style>
