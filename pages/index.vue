@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="index-container">
     <!-- 顶部导航菜单 -->
     <CampusMenu
       v-if="categoryObj != null"
@@ -31,8 +31,6 @@
             </el-pagination>
           </div>
         </div>
-        <!-- 侧边栏内容 -->
-        <CampusSide class="hidden-xs-only" :categoryObj="categoryObj"></CampusSide>
       </div>
     </div>
   </div>
@@ -49,7 +47,6 @@ import { getToken, setToken, removeToken } from "@/utils/auth";
 //引用组件
 import Content from "@/components/Content";
 import CampusMenu from "@/components/Menu";
-import CampusSide from "@/components/CampusSide";
 
 export default {
   components: { Content, CampusMenu },
@@ -76,7 +73,6 @@ export default {
 
   //创建的时候自动调用
   created() {
-
     this.getAllCategorys();
     this.getContent(this.contentVo);
   },
@@ -84,7 +80,6 @@ export default {
   mounted() {
     this.mainMinHeight = document.documentElement.clientHeight - 45;
     this.contentVo.pageNum = 1;
-    // this.contentVo.categoryId = 0;
   },
   methods: {
     //点击菜单后（子组件传递数据）
@@ -124,46 +119,33 @@ export default {
   },
 };
 </script>
-
 <style>
-.tag-group {
-  text-align: center;
-}
-/* 分页 */
-.fenye {
-  width: 100%;
-  margin: 0 auto;
-  text-align: center;
-}
-/* 标签 */
-.clickable {
-  margin-top: 5px;
-  cursor: pointer;
-}
-.index-bg {
-  max-width: 1122px;
-  margin: 0 auto;
-  border-radius: 10px;
-}
+  .index-container {
+    max-width: 1122px; /* 设置最大宽度与 index-bg 一致 */
+    margin: 0 auto; /* 居中对齐 */
+  }
 
-.content-t {
-  margin: 20px 0;
-}
-/* 添加半透明样式 */
-.hidden-xs-only {
-  background-color: rgba(255, 255, 255, 0.7) !important; /* 80% 透明度的白色背景 */
-  backdrop-filter: blur(10px); /* 添加背景模糊效果 */
-  -webkit-backdrop-filter: blur(10px); /* Safari 兼容 */
-  transition: background-color 0.3s ease; /* 添加过渡效果 */
-}
+  .index-bg {
+    max-width: 1122px; /* 设置最大宽度 */
+    margin: 0 auto; /* 水平居中 */
+    border-radius: 10px;
+    display: flex; /* 启用弹性布局 */
+    justify-content: center; /* 水平居中 */
+    align-items: center; /* 垂直居中 */
+    flex-direction: column; /* 垂直排列内容 */
+  }
 
-/* 鼠标悬停时降低透明度 */
-.hidden-xs-only:hover {
-  background-color: rgba(255, 255, 255, 0.9) !important;
-}
+  .campus-menu {
+    width: 100%; /* 确保导航栏宽度与容器一致 */
+  }
 
-/* 确保其他样式保持不变 */
-.campus-main {
-  flex: 1;
-}
+  .content-t {
+    margin: 20px 0;
+  }
+
+  .fenye {
+    width: 100%;
+    margin: 0 auto;
+    text-align: center;
+  }
 </style>

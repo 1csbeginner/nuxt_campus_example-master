@@ -66,7 +66,7 @@
             <el-button
               v-if="!isEditingTags"
               type="text"
-              size="mini"
+              size="medium"
               @click="isEditingTags = true"
             >编辑</el-button>
             <div v-else>
@@ -315,7 +315,7 @@ export default {
 <style scoped>
 .campus-side {
   background-color: #fff;
-  width: 280px;
+  width: 100%;
   margin-left: 8px;
   position: sticky;
   top: 70px; /* 调整为顶部导航栏高度 + 20px */
@@ -324,7 +324,7 @@ export default {
 }
 .campus-side-main {
   position: sticky;
-  width: 280px;
+  width: 100%;
   top: 45px;
 }
 .campus-side-card .con {
@@ -340,11 +340,11 @@ export default {
 }
 .campus-side-title {
   align-self: center;
-  font-size: 14px;
+  font-size: 24px;
   line-height: 18px;
 }
 .side-rank-num {
-  font-size: 16px;
+  font-size: 20px;
   font-weight: 700;
   position: absolute;
   left: 0;
@@ -353,13 +353,13 @@ export default {
   color: #ff8200;
 }
 .side-f12 {
-  font-size: 12px;
+  font-size: 17px;
   line-height: 16px;
 }
 
 .category-box {
   padding: 4px 10px;
-  font-size: 12px;
+  font-size: 16px;
   border: 1px solid #ccc;
   border-radius: 4px;
   cursor: pointer;
@@ -380,7 +380,7 @@ export default {
 .tag-box {
   display: inline-block;
   padding: 4px 12px;
-  font-size: 12px;
+  font-size: 16px;
   border: 1px solid #ccc;
   border-radius: 12px;
   cursor: pointer;

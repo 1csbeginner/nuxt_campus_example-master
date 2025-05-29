@@ -1,67 +1,82 @@
 <template>
   <div class="top-nav">
-    <el-menu
-      mode="horizontal"
-      default-active="1"
-      @select="handleSelectMenu"
-      background-color="#ffffff"
-      text-color="#000000"
-      active-text-color="#d2691e"
-    >
-      <el-menu-item index="home">
+    <div class="nav-container">
+      <div class="nav-item" @click="goToHome" v-if="!isHome">
         <span>首页</span>
-      </el-menu-item>
+      </div>
+      <div
+        class="nav-item"
+        v-for="(item, i) in categoryTree"
+        :key="'single-' + i"
+        v-if="!item.children || !item.children.length"
+        @click="selectCategory(item.categoryId)"
+      >
+        <span>{{ item.categoryName }}</span>
+      </div>
 
-      <el-menu-item index="shop" @click="goToShop">
-        <span>购物</span>
-      </el-menu-item>
-
-      <el-submenu
+      <el-dropdown
         v-for="(item, i) in categoryTree"
         :key="i"
-        :index="item.categoryId"
+        v-if="item.children && item.children.length"
+        placement="bottom"
+        trigger="hover"
       >
-        <template slot="title">
+        <div class="nav-item">
           <span>{{ item.categoryName }}</span>
-        </template>
-        <el-menu-item
-          v-for="(child, i) in item.children"
-          :key="i"
-          :index="child.categoryId"
-        >
-          <span>{{ child.categoryName }}</span>
-        </el-menu-item>
-      </el-submenu>
-    </el-menu>
+          <i class="el-icon-arrow-down"></i>
+        </div>
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item
+            v-for="(child, j) in item.children"
+            :key="j"
+            @click.native="selectCategory(child.categoryId)"
+          >
+            {{ child.categoryName }}
+          </el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
+
+      <div
+        class="nav-item"
+        @click="goToHotList"
+      >
+        <span>热度榜&推荐榜</span>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+import { handleTree } from "@/utils/ruoyi";
+
 export default {
   props: ["categoryObj"],
   data() {
     return {
       categoryTree: [],
-      selectMenuId: null,
     };
   },
+  computed: {
+    // 检查当前路由是否是首页
+    isHome() {
+      return this.$route.path === "/";
+    },
+  },
   created() {
-    this.categoryTree = this.handleTree(this.categoryObj, "categoryId");
+    this.categoryTree = handleTree(this.categoryObj, "categoryId");
   },
   methods: {
-    handleSelectMenu(key, keyPath) {
-      if (isNaN(key)) {
-        console.warn("Invalid category ID:", key);
-        return;
-      }
-
-      if (this.selectMenuId != key) {
-        this.selectMenuId = key;
-        this.$emit("handleCategory", key);
-      }
+    selectCategory(id) {
+      this.$emit("handleCategory", id);
+    },
+    goToHome() {
+      this.$router.push("/");
     },
     goToShop() {
-      this.$router.push({ path: "/shop" });
+      this.$router.push("/shop");
+    },
+    goToHotList() {
+      this.$router.push("/hotlist");
     },
   },
 };
@@ -69,24 +84,41 @@ export default {
 
 <style scoped>
 .top-nav {
-  width: 100%;
   background-color: #fff;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
-  margin-bottom: 20px;
+  top: 60px;
+  z-index: 1000;
 }
 
-.top-nav .el-menu {
+.nav-container {
+  display: flex;
   max-width: 1122px;
   margin: 0 auto;
-  border-bottom: none;
+  padding: 0 10px;
 }
 
-.top-nav .el-menu--horizontal {
-  white-space: normal;
-}
-
-.top-nav .el-menu-item,
-.top-nav .el-submenu {
+.nav-item {
   padding: 0 15px;
+  height: 50px;
+  line-height: 50px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: all 0.3s;
+  font-size: 14px;
+}
+
+.nav-item:hover {
+  color: #d2691e;
+  background-color: #f5f5f5;
+}
+
+.el-dropdown {
+  height: 100%;
+}
+
+.el-icon-arrow-down {
+  margin-left: 5px;
+  font-size: 12px;
 }
 </style>

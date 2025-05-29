@@ -1,103 +1,84 @@
 <template>
-  <div class="ss">
-    <div class="grid-content bg-purple-dark">
-      <div class="login">
-        <!--账号登录 #start -->
-        <el-form
-          ref="loginForm"
-          :model="loginForm"
-          :rules="loginRules"
-          class="login-form"
+  <div class="login">
+    <el-form
+      ref="loginForm"
+      :model="loginForm"
+      :rules="loginRules"
+      class="login-form"
+    >
+      <h3 class="title">校园信息墙</h3>
+      <el-form-item prop="username">
+        <el-input
+          v-model="loginForm.username"
+          type="text"
+          auto-complete="off"
+          placeholder="账号"
         >
-          <h3 class="title">登录账户</h3>
-          <el-form-item prop="username">
-            <el-input
-              v-model="loginForm.username"
-              type="text"
-              auto-complete="off"
-              placeholder="账号"
-            >
-              <svg-icon
-                slot="prefix"
-                icon-class="user"
-                class="el-input__icon input-icon"
-              />
-            </el-input>
-          </el-form-item>
-          <el-form-item prop="password">
-            <el-input
-              v-model="loginForm.password"
-              type="password"
-              auto-complete="off"
-              placeholder="密码"
-              @keyup.enter.native="handleLogin"
-            >
-              <svg-icon
-                slot="prefix"
-                icon-class="password"
-                class="el-input__icon input-icon"
-              />
-            </el-input>
-          </el-form-item>
-          <el-form-item prop="code" v-if="captchaEnabled">
-            <el-input
-              v-model="loginForm.code"
-              auto-complete="off"
-              placeholder="验证码"
-              style="width: 63%"
-              @keyup.enter.native="handleLogin"
-            >
-              <svg-icon
-                slot="prefix"
-                icon-class="validCode"
-                class="el-input__icon input-icon"
-              />
-            </el-input>
-            <div class="login-code">
-              <img :src="codeUrl" @click="getCode" class="login-code-img" />
-            </div>
-          </el-form-item>
-          <el-form-item>
-            <el-form-item>
-              <router-link
-                to="/resetPwd"
-                class="el-link el-link--danger"
-                style="float: left"
-              >忘记密码？</router-link>
-
-              <router-link
-                to="#"
-                class="el-link el-link--danger"
-                style="float: right"
-                @click.native.prevent="openWxamp"
-              >使用微信登录</router-link>
-            </el-form-item>
-          </el-form-item>
-
-          <el-form-item style="width: 100%">
-            <el-button
-              :loading="loading"
-              size="medium"
-              type="primary"
-              style="width: 100%"
-              @click.native.prevent="handleLogin"
-            >
-              <span v-if="!loading">登 录</span>
-              <span v-else>登 录 中...</span>
-            </el-button>
-            <div style="float: right">
-              <router-link class="link-type" :to="'/register'"
-                >立即注册</router-link
-              >
-            </div>
-          </el-form-item>
-        </el-form>
-      </div>
+          <svg-icon
+            slot="prefix"
+            icon-class="user"
+            class="el-input__icon input-icon"
+          />
+        </el-input>
+      </el-form-item>
+      <el-form-item prop="password">
+        <el-input
+          v-model="loginForm.password"
+          type="password"
+          auto-complete="off"
+          placeholder="密码"
+          @keyup.enter.native="handleLogin"
+        >
+          <svg-icon
+            slot="prefix"
+            icon-class="password"
+            class="el-input__icon input-icon"
+          />
+        </el-input>
+      </el-form-item>
+      <el-form-item prop="code" v-if="captchaEnabled">
+        <el-input
+          v-model="loginForm.code"
+          auto-complete="off"
+          placeholder="验证码"
+          style="width: 63%"
+          @keyup.enter.native="handleLogin"
+        >
+          <svg-icon
+            slot="prefix"
+            icon-class="validCode"
+            class="el-input__icon input-icon"
+          />
+        </el-input>
+        <div class="login-code">
+          <img :src="codeUrl" @click="getCode" class="login-code-img" />
+        </div>
+      </el-form-item>
+      <el-form-item style="width: 100%">
+        <el-button
+          :loading="loading"
+          size="medium"
+          type="primary"
+          style="width: 100%"
+          @click.native.prevent="handleLogin"
+        >
+          <span v-if="!loading">登 录</span>
+          <span v-else>登 录 中...</span>
+        </el-button>
+        <div style="float: right">
+          <router-link class="link-type" :to="'/register'"
+            >立即注册</router-link
+          >
+        </div>
+      </el-form-item>
+    </el-form>
+    <!-- 底部 -->
+    <div class="el-login-footer">
+      <span>上海理工大学软件协同第八小组</span>
     </div>
-
-    <!--登录 #end -->
   </div>
 </template>
+
 <script>
 import cookie from "js-cookie";
 import userInfoApi from "@/api/userInfo";
@@ -153,17 +134,6 @@ export default {
         }
       });
     },
-    //打开微信小程序二维码登录
-    openWxamp() {
-
-      var flag = window.open("/wxamp", "Campus", "width=400,height=700,left=30,top=10");
-      var loop = setInterval(function () {
-        if (flag.closed) {
-          clearInterval(loop);
-          window.location.reload();
-        }
-      }, 3);
-    },
     // 用户登录
     handleLogin() {
       this.$refs.loginForm.validate((valid) => {
@@ -198,12 +168,15 @@ export default {
 <style>
 .login {
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
   height: 100%;
+  padding-right: 50px;
 }
-.router-link-active {
-  text-decoration: none;
+.title {
+  margin: 0px auto 30px auto;
+  text-align: center;
+  color: #707070;
 }
 
 .login-form {
@@ -218,17 +191,7 @@ export default {
 .el-input input {
   height: 38px;
 }
-.input-icon {
-  height: 39px;
-  width: 14px;
-  margin-left: 2px;
-}
 
-.login-tip {
-  font-size: 13px;
-  text-align: center;
-  color: #bfbfbf;
-}
 .login-code {
   width: 33%;
   height: 38px;

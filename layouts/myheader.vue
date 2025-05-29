@@ -284,8 +284,9 @@ export default {
   left: 0;
   top: 0;
   width: 100%;
-  z-index: 1;
+  z-index: 1010;
   background-color: #2a4465;
+  height: 60px;
 }
 a {
   color: #919191;
