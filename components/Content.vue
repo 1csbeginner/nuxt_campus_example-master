@@ -79,7 +79,7 @@ export default {
     return {
       //是否点赞
       zanBoolean: false,
-      contentWidth: "width:605px;",
+      contentWidth: "width:900px;",
     };
   },
   //生命周期 - 创建完成（可以访问当前this实例）

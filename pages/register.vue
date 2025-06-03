@@ -6,6 +6,9 @@
       :rules="registerRules"
       class="register-form"
     >
+      <div class="login-logo">
+        <img src="@/assets/images/dzlogo.png" alt="logo"/>
+      </div>
       <h3 class="title">校园信息墙</h3>
       <el-form-item prop="username">
         <el-input
@@ -108,7 +111,7 @@ export default {
     };
     const checkUserName = (rule, value, callback) => {
       //判断用户名是否存在
- 
+
       checkUserNameUnique(value).then((response) => {
         if (response.data !== true) {
           callback(new Error("用户名已经存在"));
@@ -224,10 +227,12 @@ export default {
 
 .register-form {
   border-radius: 6px;
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.7);
   width: 400px;
+  height: 800px;
   padding: 25px 25px 5px 25px;
 }
+
 .el-input {
   height: 38px;
 }
@@ -258,5 +263,17 @@ export default {
 }
 .register-code-img {
   height: 38px;
+}
+.login-logo {
+  display: flex;
+  justify-content: center; /* 水平居中 */
+  align-items: center; /* 垂直居中 */
+  margin-bottom: 20px; /* 图片与标题之间的间距 */
+}
+
+.login-logo img {
+  max-width: 200px; /* 设置图片最大宽度 */
+  height: 50px; /* 保持图片比例 */
+  width: 200px;
 }
 </style>
