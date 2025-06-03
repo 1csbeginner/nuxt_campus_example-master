@@ -34,7 +34,7 @@
                 <!-- 分类 -->
 
 
-                <div class="woo-box-item-inlineBlock">
+                <!-- <div class="woo-box-item-inlineBlock">
                   <el-button
                     type="text"
                     @click="selectPicture()"
@@ -61,7 +61,7 @@
                     />
                     <span class="iconbed-text">视频</span>
                   </el-button>
-                </div>
+                </div> -->
               </div>
 
               <!-- 取消按钮 -->

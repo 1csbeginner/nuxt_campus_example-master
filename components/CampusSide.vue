@@ -314,7 +314,7 @@ export default {
 
 <style scoped>
 .campus-side {
-  background-color: #fff;
+  background-color: transparent;
   width: 100%;
   margin-left: 8px;
   position: sticky;
@@ -402,7 +402,7 @@ export default {
 }
 
 :deep(.el-loading-mask) {
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: rgba(255, 255, 255, 0.7);
 }
 :deep(.el-loading-spinner) {
   margin-top: -20px;
