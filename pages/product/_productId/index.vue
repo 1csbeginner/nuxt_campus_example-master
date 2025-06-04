@@ -11,6 +11,7 @@
       <div class="product-info">
         <h2 class="product-title">{{ product.name }}</h2>
         <p class="product-price">￥{{ product.price }}</p>
+        <p class="product-introduce">{{ product.introduce}}</p>
 
         <!-- 库存信息 -->
         <p v-if="product.stock > 0" class="product-stock">库存: {{ product.stock }} 件</p>
@@ -204,6 +205,11 @@ export default {
 .product-title {
   font-size: 24px;
   font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.product-introduce {
+  font-size: 22px;
   margin-bottom: 10px;
 }
 
